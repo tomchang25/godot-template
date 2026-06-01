@@ -1,0 +1,610 @@
+# Block Scene Architecture Standard
+
+This document defines the structural rules for block scene scripts.
+
+Applies to:
+
+- Block scene root scripts
+- Testbed scenes
+- Reusable UI component scripts
+
+Does **not** apply to:
+
+- Autoloads and global managers
+- Resource definitions under `data/`
+- Common framework scripts
+
+---
+
+# 1. File Header
+
+Every script must begin with a file header comment block.
+
+Format:
+
+```gdscript
+# script_name.gd
+# Block XX — One-line description of this block's responsibility.
+# Reads:  StateManager.state.field_name
+# Writes: StateManager.state.field_name
+```
+
+Rules:
+
+- The first line is the filename.
+- The second line is the block number and a single-sentence description.
+- `Reads` and `Writes` list every managed state field this script touches.
+- If the script reads nothing, omit the `Reads` line.
+- If the script writes nothing, omit the `Writes` line.
+
+Testbed variant:
+
+```gdscript
+# script_name.gd
+# Block XX testbed — one-line description of what it bypasses and tests.
+#
+# Run this scene to test [Feature] in isolation.
+# Edit the @export fields in the Inspector to configure fake state.
+```
+
+---
+
+# 2. Declaration Order
+
+Declarations at the top of the file follow this order:
+
+```
+@tool (if needed)
+extends
+class_name (if needed)
+
+signals
+enums
+
+const
+preload constants
+
+@export / @export_group
+
+private variables
+
+@onready
+```
+
+Rules:
+
+- `@tool` goes on the very first line when present, before `extends`.
+- Signals are declared before constants so they appear first in the class contract.
+- Enums follow signals, as they can be used as export type hints and const initializers.
+- Constants and preloads come before `@export` so export default values can reference them.
+- `@onready` goes last because it is resolved after `_ready()` enters the scene tree.
+- `class_name` is only added when the script needs to be referenced by type elsewhere.
+  Omit it for scene root scripts that are never typed directly.
+
+---
+
+# 3. Variable Block Headers (single-line)
+
+Variable groups at the top of the file use the **single-line** (`──`) format.
+
+```gdscript
+# ── Group name ────────────────────────────────────────────────────────────────
+```
+
+The dashes extend to column 80. Use a consistent label from the table below.
+
+Standard variable groups, in order:
+
+| Header                             | Contents                                          |
+| ---------------------------------- | ------------------------------------------------- |
+| `# ── Constants ──...`             | `const` and `preload`                             |
+| `# ── Exports ──...`               | `@export` vars                                    |
+| `# ── State ──...`                 | Runtime logic variables                           |
+| `# ── Timer / tween handles ──...` | `Timer`, `Tween` vars                             |
+| `# ── Node references ──...`       | `@onready` node references bound to `.tscn` nodes |
+
+Rules:
+
+- Only include groups that have at least one variable.
+- Do not create custom group names unless no standard label fits.
+
+---
+
+# 4. Function Section Headers (double-line)
+
+Function groups use the **double-line** (`══`) format.
+
+```gdscript
+# ══ Section name ══════════════════════════════════════════════════════════════
+```
+
+The `═` characters extend to column 80.
+
+---
+
+# 5. Section Order
+
+Sections appear in this fixed order:
+
+```
+Inner classes (if any)
+
+Lifecycle
+Signal handlers
+Common API        (if the script has public functions)
+Feature section 1
+Feature section 2
+...
+UI builder        (only when runtime node construction is required — see Section 11)
+```
+
+### Inner classes
+
+Placed above all function sections, immediately after the variable blocks.
+
+```gdscript
+# ══ Inner class: description ══════════════════════════════════════════════════
+class _ClassName extends BaseClass:
+    ...
+```
+
+### Lifecycle
+
+Contains only `_ready()`, `_unhandled_input()`, and any other built-in Godot lifecycle callbacks (`_process`, `_physics_process`, etc.).
+No private helpers here — helpers belong in their feature section.
+
+```gdscript
+# ══ Lifecycle ═════════════════════════════════════════════════════════════════
+
+func _ready() -> void:
+    ...
+
+func _unhandled_input(event: InputEvent) -> void:
+    ...
+```
+
+### Signal handlers
+
+Contains only `_on_xxx()` callbacks.
+No public functions. No logic helpers.
+
+```gdscript
+# ══ Signal handlers ════════════════════════════════════════════════════════════
+
+func _on_confirm_pressed() -> void:
+    ...
+
+func _on_cancel_pressed() -> void:
+    ...
+```
+
+### Common API
+
+Public functions that do not belong to a specific feature domain.
+Used when the script exposes a surface that other scripts call.
+
+```gdscript
+# ══ Common API ════════════════════════════════════════════════════════════════
+
+func setup(entry: EntryType, ctx: ContextType) -> void:
+    ...
+
+func refresh() -> void:
+    ...
+```
+
+### Feature sections
+
+Domain-specific groups. Each section may contain both public and private functions.
+Private helpers follow their public counterparts within the same section.
+
+```gdscript
+# ══ Rows ══════════════════════════════════════════════════════════════════════
+
+func _populate_rows() -> void:
+    ...
+
+# ══ Result ════════════════════════════════════════════════════════════════════
+
+func _commit_result() -> void:
+    ...
+
+func _show_summary() -> void:
+    ...
+```
+
+Use descriptive domain names that reflect the feature, not the project's current block list.
+
+### UI builder
+
+Always the last section when present.
+Contains `_build_ui()` and any private builder helpers it calls.
+
+Only include this section when runtime node construction is genuinely required (see Section 11).
+Most block scenes should not have this section at all.
+
+```gdscript
+# ══ UI builder ════════════════════════════════════════════════════════════════
+
+func _build_ui() -> void:
+    ...
+
+func _make_column_header() -> HBoxContainer:
+    ...
+```
+
+---
+
+# 6. Inline Sub-section Comments (inside functions)
+
+Long functions — especially `_build_ui()` — use inline sub-section comments to mark regions.
+
+Format:
+
+```gdscript
+    # ── Sub-section label ─────────────────────────────────────────────────────
+```
+
+Note: indented to match the function body. Dashes extend to column 80 from the indent level.
+
+Example:
+
+```gdscript
+func _build_ui() -> void:
+    set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+
+    # ── Background ────────────────────────────────────────────────────────────
+    var bg := ColorRect.new()
+    ...
+
+    # ── Title ─────────────────────────────────────────────────────────────────
+    var title := Label.new()
+    ...
+
+    # ── Item list panel ───────────────────────────────────────────────────────
+    var panel := PanelContainer.new()
+    ...
+```
+
+Only add inline sub-sections when the function is long enough to need navigation.
+Short functions (under ~15 lines) do not need them.
+
+---
+
+# 7. Private vs Public Placement Rule
+
+Private functions belong **inside the section they serve**, not in a global private section at the bottom.
+
+```gdscript
+# ══ Result ════════════════════════════════════════════════════════════════════
+
+func _commit_result() -> void:   # private — lives here, not at file bottom
+    ...
+
+func _show_summary() -> void:    # private — lives here, not at file bottom
+    ...
+```
+
+Exception: `_on_xxx` signal callbacks always go in `# ══ Signal handlers ══`, regardless of which feature they relate to.
+
+---
+
+# 8. State Manager Separation
+
+Block scenes read run-time state from the **run state manager**, not from the **scene transition manager**.
+
+The scene transition manager is responsible for scene transitions only.
+The run state manager holds all per-run state.
+
+```gdscript
+# ✅ Correct — read state from the state manager, navigate via GameManager
+_entities = MyStateManager.current_entities
+GameManager.go_to("next_scene")
+
+# ❌ Incorrect — scene transition manager does not hold game state
+_entities = GameManager.entities
+```
+
+The file header `Reads` / `Writes` annotations should reference the run state manager's fields accordingly.
+
+---
+
+# 9. Complete Layout Reference
+
+```gdscript
+# script_name.gd
+# Block XX — Description.
+# Reads:  MyStateManager.state.field_a
+# Writes: MyStateManager.state.field_b
+extends Control
+
+# ── Constants ─────────────────────────────────────────────────────────────────
+
+const MAX_ITEMS    := 6
+const EntityRowScene := preload("uid://...")   # PascalCase — loaded type
+
+# ── State ─────────────────────────────────────────────────────────────────────
+
+var _entities: Array[ExampleEntityData] = []
+var _ctx: ContextType = null
+
+# ── Node references ───────────────────────────────────────────────────────────
+
+@onready var _row_container: VBoxContainer = $RootVBox/Panel/RowContainer
+@onready var _continue_btn: Button = $RootVBox/Footer/ContinueButton
+
+
+# ══ Lifecycle ═════════════════════════════════════════════════════════════════
+
+func _ready() -> void:
+    _continue_btn.pressed.connect(_on_continue_pressed)
+
+    _entities = MyStateManager.state.entities
+    _populate_rows()
+
+
+# ══ Signal handlers ════════════════════════════════════════════════════════════
+
+func _on_continue_pressed() -> void:
+    GameManager.go_to("next_scene")
+
+
+# ══ Rows ══════════════════════════════════════════════════════════════════════
+
+func _populate_rows() -> void:
+    for entity: ExampleEntityData in _entities:
+        var row: EntityRow = EntityRowScene.instantiate()
+        row.setup(entity, _ctx)
+        row.row_pressed.connect(_on_row_pressed)
+        _row_container.add_child(row)
+```
+
+Note: `_build_ui()` is absent from this reference layout. It only appears when runtime node construction is required (see Section 11). Most block scenes will match this layout exactly.
+
+---
+
+# 10. Header Length Reference
+
+Both formats should reach approximately **column 80** (including indent for inline variants).
+
+```
+# ── Label ────────────────────────────────────────────────────────────────────   ← variable block (col 80)
+# ══ Label ════════════════════════════════════════════════════════════════════   ← function section (col 80)
+    # ── Label ────────────────────────────────────────────────────────────────   ← inline sub-section (col 80 from indent)
+```
+
+Use a consistent character count per format rather than eyeballing it each time.
+The exact dash count matters less than visual consistency — copy from an existing header.
+
+---
+
+# 11. Node Source Rule
+
+All persistent nodes in a block scene **must be defined in the `.tscn` file**.
+Reference them at the top of the script using `@onready` under `# ── Node references ──`.
+
+Exceptions: debug-only display nodes (e.g. `_debug_label` behind `OS.is_debug_build()`) and `Timer` nodes — these must always be created in code, never placed in `.tscn`. See the permitted exceptions table below.
+
+```gdscript
+# ── Node references ───────────────────────────────────────────────────────────
+
+@onready var _confirm_button: Button = $RootVBox/Footer/ConfirmButton
+@onready var _row_container: VBoxContainer = $RootVBox/Panel/RowContainer
+```
+
+**Do not use `_build_ui()`** to construct persistent structural nodes in code.
+
+---
+
+## Signal connections
+
+Connect signals between a scene's own nodes in `_ready()`, not in the `.tscn`.
+This keeps the full connection surface visible in code without IDE dependency for wiring.
+
+Connections go at the top of `_ready()`, before any logic or node setup:
+
+```gdscript
+func _ready() -> void:
+    _confirm_button.pressed.connect(_on_confirm_pressed)
+    _cancel_button.pressed.connect(_on_cancel_pressed)
+    # ... rest of setup
+```
+
+This applies to all signal connections — buttons, custom signals from child nodes, and connections to autoloads.
+
+---
+
+## Instantiating packed scenes
+
+When instantiating a reusable component scene (row, card, etc.) into a container,
+follow this fixed order:
+
+```gdscript
+for entity: ExampleEntityData in _entities:
+    var row: EntityRow = EntityRowScene.instantiate()   # 1. instantiate
+    row.setup(entity, _ctx)                             # 2. apply data
+    row.row_pressed.connect(_on_row_pressed)            # 3. connect signals
+    _row_container.add_child(row)                       # 4. add to tree
+```
+
+Why this order:
+
+- **`setup()` before `add_child()`** — `add_child()` triggers the child's `_ready()`.
+  Applying data first means `_ready()` runs with the node already populated, removing
+  the need for an `is_node_ready()` guard inside `setup()` and a matching refresh inside
+  `_ready()`.
+- **`connect()` before `add_child()`** — ensures every listener is attached before any
+  signal the child might emit during `_ready()`.
+
+The component's `setup()` is its **apply function**: a single public entry point that takes all data the component needs and leaves the component ready to display. Components should not rely on setters, direct property assignment, or post-construction tweaking from the parent — everything flows through `setup()`.
+
+If the component must also support updates after being shown, expose a separate `refresh()` (no arguments, re-reads current state) rather than overloading `setup()`.
+
+---
+
+## Component `setup()` implementation
+
+A reusable component's `setup()` is its **apply function** — but it has a specific internal shape, because it may be called either before or after the component enters the scene tree.
+
+The pattern:
+
+```gdscript
+# ── State ─────────────────────────────────────────────────────────────────────
+
+var _entity_data: ExampleEntityData = null
+var _index: int = 0
+var _total: int = 0
+
+# ── Node references ───────────────────────────────────────────────────────────
+
+@onready var _index_label: Label = $IndexLabel
+@onready var _count_label: Label = $CountLabel
+# ...
+
+# ══ Lifecycle ═════════════════════════════════════════════════════════════════
+
+func _ready() -> void:
+    _enter_button.pressed.connect(func() -> void: enter_pressed.emit())
+    _pass_button.pressed.connect(func() -> void: pass_pressed.emit())
+
+    if _entity_data != null:
+        _apply()
+
+# ══ Common API ════════════════════════════════════════════════════════════════
+
+func setup(entity_data: ExampleEntityData, index: int, total: int) -> void:
+    _entity_data = entity_data
+    _index = index
+    _total = total
+
+    if is_node_ready():
+        _apply()
+
+
+func refresh() -> void:
+    if is_node_ready():
+        _apply()
+
+# ══ View ══════════════════════════════════════════════════════════════════════
+
+func _apply() -> void:
+    _index_label.text = "Lot %d / %d" % [_index + 1, _total]
+    _item_count_label.text = "%d items" % _lot_data.items.size()
+    # ... writes every @onready node from private state
+```
+
+Rules:
+
+- `setup()` **only** stores arguments to private variables, then calls `_apply()` gated
+  by `is_node_ready()`. It must not touch any `@onready` node directly.
+- `_apply()` is private, takes no arguments, reads private state, and writes the
+  `@onready` nodes. It is the **only** function that touches view nodes.
+- `_ready()` connects signals first, then — if private state has already been populated
+  by an earlier `setup()` call — calls `_apply()`. The sentinel is whatever private
+  field is `null` / default before `setup()` is called (e.g. `_lot_data != null`).
+- `refresh()`, if the component exposes one, calls `_apply()` guarded by `is_node_ready()`.
+  It never re-assigns private state.
+
+Why this shape:
+
+- **Covers both call orders.** Calling `setup()` before `add_child()` stores the data
+  and defers the paint until `_ready()`. Calling `setup()` after `add_child()` (to
+  re-use a live component with new data) paints immediately.
+- **No nil crashes on `@onready`.** `setup()` never dereferences a node that may not
+  be resolved yet — `_apply()` is the only place that does, and it's always called
+  after `is_node_ready()` has returned true.
+- **One source of paint truth.** Every path that needs to update the view goes through
+  `_apply()`. There is no second code path in `_ready()` that reads private state and
+  writes nodes, so the two cannot drift.
+
+Do **not** write components that paint directly inside `setup()` without the guard — they work only when the parent happens to call `setup()` after `add_child()`, and break silently the moment someone flips the order.
+
+---
+
+## Component `.tscn` default content
+
+A component's `.tscn` defines the full node tree with neutral **placeholder** values in every user-visible field — not blank strings, not real data, not leftover editor text from whoever built the scene.
+
+Use values that clearly read as "not yet populated":
+
+```
+text = " - "
+text = "? / ?"
+text = "0"
+```
+
+Reason: between the moment the component enters the tree and the moment `_apply()` runs, its nodes are visible. With placeholders the intermediate frame reads as an unpopulated shell; with leftover real-looking data it reads as a bug (wrong name, wrong price, wrong count). Placeholders also make it obvious during development if a field is ever missed by `_apply()` — the `—` will still be there at runtime.
+
+This applies to `Label.text`, `TextureRect.texture` (leave null), `Button.text` on
+dynamic buttons, and any other field `_apply()` will overwrite.
+
+---
+
+## Permitted exceptions
+
+The following may still be created at runtime in code:
+
+| Case                    | Example                                                     | Reason                                                     |
+| ----------------------- | ----------------------------------------------------------- | ---------------------------------------------------------- |
+| Packed scene instances  | `ItemRowScene.instantiate()`                                | Count unknown at edit time                                 |
+| Ephemeral display nodes | Tooltips, empty-state labels, `HSeparator` in dynamic lists | Created and destroyed during the scene's lifetime          |
+| Custom-drawn controls   | Inner class with `_draw()` override                         | Requires `_draw()` override — cannot be defined in `.tscn` |
+| Debug-only display      | `_debug_label` in `OS.is_debug_build()` guard               | Never shipped — polluting `.tscn` with invisible nodes is misleading |
+| Timer nodes             | `Timer.new()` for timed logic                                | Godot scene timers fire during tool mode, causing phantom ticks in the editor; always create in code |
+
+The key question: **does this node exist for the full lifetime of the scene?**
+If yes → define it in `.tscn`. If no → creating it in code is acceptable.
+
+---
+
+## `node-src` markers (enforcement)
+
+Whether an `add_child(...)` is a violation depends on whether the node is
+persistent — a judgment a linter can't make from the call site alone. To make the
+rule machine-checkable, every runtime `add_child` of a node that is **not** a
+`.instantiate()`'d packed scene must carry a marker declaring which permitted
+exception applies. Put the marker on the comment line **directly above** the call
+(the linter also accepts a trailing marker, but above-the-call is preferred — it
+keeps the call clean and gives the note room):
+
+```gdscript
+# node-src: timer
+add_child(_npc_timer)
+
+# node-src: ephemeral — separator in rebuilt list
+_lot_summary.add_child(HSeparator.new())
+
+# node-src: drawn
+price_area.add_child(_circle_node)
+
+# node-src: debug
+add_child(_debug_label)
+
+# node-src: instance — packed scene not auto-detected
+my_container.add_child(thing)
+```
+
+An optional note may follow the tag after ` — `; the linter ignores everything
+after the tag. **Keep the note to a short phrase** (the exception category, e.g.
+`empty-state label`, `per-grid cell, dynamic W×H`). If a marker needs a
+full-sentence justification to feel honest, treat that as a signal the node should
+be **extracted into a `.tscn` component** rather than annotated — a long excuse is
+the smell, not the fix.
+
+Tags map 1:1 to the permitted-exceptions table above:
+
+| Tag | Case |
+| --- | --- |
+| `instance` | packed scene instance not auto-detected from a local `.instantiate()` |
+| `ephemeral` | tooltip, empty-state label, separator in a dynamic list |
+| `drawn` | custom-drawn control (inner class with `_draw()`) |
+| `debug` | debug-only display behind `OS.is_debug_build()` |
+| `timer` | `Timer` node (always created in code) |
+
+`add_child(SomeScene.instantiate())` — and any local variable assigned from
+`.instantiate()` — needs **no** marker; it is recognised automatically.
+
+An unmarked, non-instantiate `add_child` is a lint failure (`lint_standards.py`,
+§11). The marker doesn't prove the node is genuinely ephemeral — it forces the
+author to declare intent so a reviewer can see and judge the claim. See
+`dev/standards/standards_enforcement.md`.
