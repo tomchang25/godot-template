@@ -21,14 +21,6 @@ from tres_lib.uid import read_script_uid
 from tres_lib.registry import REGISTRY
 from validate_yaml import validate
 
-# Entities that are silently skipped when empty (no "Exporting ..." line).
-_SKIP_IF_EMPTY = frozenset(
-    {"skills", "lots", "locations", "special_orders", "merchants"}
-)
-
-# YAML keys to include in merged data but not export as .tres files.
-_VALIDATION_ONLY_KEYS = frozenset()
-
 
 def _write(out_path: Path, content: str, dry_run: bool, label: str) -> None:
     if dry_run:
@@ -69,8 +61,7 @@ def main() -> None:
         sys.exit(f"No .yaml files found in: {yaml_dir}")
 
     export_keys: set[str] = {spec.yaml_key for spec in REGISTRY}
-    all_keys: set[str] = export_keys | _VALIDATION_ONLY_KEYS
-    merged: dict[str, list] = {key: [] for key in all_keys}
+    merged: dict[str, list] = {key: [] for key in export_keys}
     for yaml_path in yaml_files:
         print(f"Loading {yaml_path.name}...")
         data = yaml.safe_load(yaml_path.read_text(encoding="utf-8"))
@@ -101,7 +92,8 @@ def main() -> None:
     total = 0
     for spec in REGISTRY:
         entries = merged.get(spec.yaml_key, [])
-        if not entries and spec.yaml_key in _SKIP_IF_EMPTY:
+        if not entries:
+            print(f"Skipping {spec.yaml_key} (no entries).")
             continue
         print(f"Exporting {spec.yaml_key} ({len(entries)})...")
         out_dir = tres_root / spec.tres_subdir
