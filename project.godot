@@ -1,0 +1,62 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Lot and Haul"
+run/main_scene="uid://bhubscene0001"
+config/features=PackedStringArray("4.6", "Forward Plus")
+config/icon="res://icon.svg"
+
+[autoload]
+
+EventBus="*uid://d2nkmaq8dlf5g"
+AudioManager="*uid://bhhaho37wph5e"
+RegistryCoordinator="*res://global/autoload/registry_coordinator.gd"
+ClueRegistry="*res://global/autoload/registries/clue_registry.gd"
+ItemRegistry="*uid://cog8cvjixi27d"
+RunManager="*uid://bioy5igkmc115"
+CarRegistry="*uid://y0kow3krldfr"
+LocationRegistry="*uid://cnpilh6m4wo27"
+CategoryRegistry="*res://global/autoload/registries/category_registry.gd"
+SuperCategoryRegistry="*res://global/autoload/registries/super_category_registry.gd"
+KnowledgeManager="*uid://bqosi6h0xps2v"
+SaveManager="*uid://bi0oymqq1g433"
+MetaManager="*res://global/autoload/meta_manager.gd"
+GameManager="*uid://bnj3y0a2848to"
+
+[debug]
+
+gdscript/warnings/integer_division=0
+gdscript/warnings/inference_on_variant=0
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+
+[file_customization]
+
+folder_colors={
+"res://common/": "red",
+"res://data/": "teal",
+"res://game/": "orange",
+"res://global/": "yellow",
+"res://stage/": "green"
+}
+
+[physics]
+
+3d/physics_engine="Jolt Physics"
+
+[rendering]
+
+rendering_device/driver.windows="d3d12"
