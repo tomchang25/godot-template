@@ -1,6 +1,6 @@
 # dev/docs
 
-Project documentation for Lot & Haul. This folder is a separate git repo.
+Project documentation. This folder is a separate git repo.
 
 ## The model: 3 levels, one source of truth
 
@@ -59,10 +59,10 @@ repo root/
 └── CHANGELOG.md Append-only shipped history. The permanent "done" record.
 
 dev/docs/
-├── vision/      L1: whole-project concept. ≤5 artifacts. Changes almost never.
-├── systems/     L2: per-system design intent + flow, present tense. Evergreen. (concept only)
-├── plans/       L2: one standalone design/work doc per file (multi-step flow detail).
-├── archived/    Completed or superseded docs (read-only reference)
+├── vision/      L1: whole-project concept. ≤5 artifacts. Changes almost never. (create when ready)
+├── systems/     L2: per-system design intent + flow, present tense. Evergreen. (create as needed)
+├── plans/       L2: one standalone design/work doc per file (multi-step flow detail). (create as needed)
+├── archived/    Completed or superseded docs (read-only reference). (create as needed)
 └── README.md    This file
 ```
 
@@ -84,8 +84,8 @@ Tie doc maintenance to "marking something done," never to a separate cleanup pas
 
 - Docs capture concepts, flow, and design intent. Implementation details (API, fields, step-by-step logic) belong in the file's class docstring or function header:
   ```gdscript
-  # item_card.gd
-  # Generalised item card for the inspection grid.
+  # entity_card.gd
+  # Generalised card UI for displaying an entity row.
   ```
   Function docstrings use `##` (GDDoc) so Godot shows them on hover — required for all public functions and private functions over 10 lines or with non-obvious logic.
 - Code-level detail (function names, field lists, signatures) → **code comments**, not here.
@@ -98,7 +98,7 @@ The project's reason to exist: core loop, player fantasy, what makes it fun. Aim
 
 ### systems/ (L2, evergreen)
 
-One file per system. Top-level files cover the cross-phase / core-loop systems (`item_system.md`, `lot_auction_run.md`, `customer_sell.md`); `meta/` holds hub-phase sub-systems (hub, knowledge, vehicle); `shared/` holds cross-cutting infrastructure (autoloads, the data model, item display).
+One file per system. Each file covers one system's design intent and current behavior — e.g. `save_system.md`, `data_pipeline.md`, `scene_routing.md`. Organise into subdirectories only when the count grows large enough to make a flat list hard to scan.
 
 Write everything in **present tense — describe the system as it is now.** A system doc is a snapshot of current design, not a history of how it got here.
 

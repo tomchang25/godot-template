@@ -297,12 +297,12 @@ The scene transition manager is responsible for scene transitions only.
 The run state manager holds all per-run state.
 
 ```gdscript
-# ✅ Correct — read state from the state manager
-_items = RunManager.run_record.items
-SceneManager.go_to_next_block()
+# ✅ Correct — read state from the state manager, navigate via GameManager
+_entities = MyStateManager.current_entities
+GameManager.go_to("next_scene")
 
-# ❌ Incorrect — scene transition manager does not hold run state
-_items = SceneManager.items
+# ❌ Incorrect — scene transition manager does not hold game state
+_entities = GameManager.entities
 ```
 
 The file header `Reads` / `Writes` annotations should reference the run state manager's fields accordingly.
@@ -314,18 +314,18 @@ The file header `Reads` / `Writes` annotations should reference the run state ma
 ```gdscript
 # script_name.gd
 # Block XX — Description.
-# Reads:  RunManager.state.field_a
-# Writes: RunManager.state.field_b
+# Reads:  MyStateManager.state.field_a
+# Writes: MyStateManager.state.field_b
 extends Control
 
 # ── Constants ─────────────────────────────────────────────────────────────────
 
-const MAX_SLOTS    := 6
-const ItemRowScene := preload("uid://...")   # PascalCase — loaded type
+const MAX_ITEMS    := 6
+const EntityRowScene := preload("uid://...")   # PascalCase — loaded type
 
 # ── State ─────────────────────────────────────────────────────────────────────
 
-var _items: Array[ItemEntry] = []
+var _entities: Array[ExampleEntityData] = []
 var _ctx: ContextType = null
 
 # ── Node references ───────────────────────────────────────────────────────────
@@ -339,22 +339,22 @@ var _ctx: ContextType = null
 func _ready() -> void:
     _continue_btn.pressed.connect(_on_continue_pressed)
 
-    _items = RunManager.state.items
+    _entities = MyStateManager.state.entities
     _populate_rows()
 
 
 # ══ Signal handlers ════════════════════════════════════════════════════════════
 
 func _on_continue_pressed() -> void:
-    SceneManager.go_to_next_block()
+    GameManager.go_to("next_scene")
 
 
 # ══ Rows ══════════════════════════════════════════════════════════════════════
 
 func _populate_rows() -> void:
-    for entry: ItemEntry in _items:
-        var row: ItemRow = ItemRowScene.instantiate()
-        row.setup(entry, _ctx)
+    for entity: ExampleEntityData in _entities:
+        var row: EntityRow = EntityRowScene.instantiate()
+        row.setup(entity, _ctx)
         row.row_pressed.connect(_on_row_pressed)
         _row_container.add_child(row)
 ```
@@ -420,11 +420,11 @@ When instantiating a reusable component scene (row, card, etc.) into a container
 follow this fixed order:
 
 ```gdscript
-for entry: ItemEntry in _items:
-    var row: ItemRow = ItemRowScene.instantiate()   # 1. instantiate
-    row.setup(entry, _ctx)                          # 2. apply data
-    row.row_pressed.connect(_on_row_pressed)        # 3. connect signals
-    _row_container.add_child(row)                   # 4. add to tree
+for entity: ExampleEntityData in _entities:
+    var row: EntityRow = EntityRowScene.instantiate()   # 1. instantiate
+    row.setup(entity, _ctx)                             # 2. apply data
+    row.row_pressed.connect(_on_row_pressed)            # 3. connect signals
+    _row_container.add_child(row)                       # 4. add to tree
 ```
 
 Why this order:
@@ -451,14 +451,14 @@ The pattern:
 ```gdscript
 # ── State ─────────────────────────────────────────────────────────────────────
 
-var _lot_data: LotData = null
+var _entity_data: ExampleEntityData = null
 var _index: int = 0
 var _total: int = 0
 
 # ── Node references ───────────────────────────────────────────────────────────
 
 @onready var _index_label: Label = $IndexLabel
-@onready var _item_count_label: Label = $ItemCountLabel
+@onready var _count_label: Label = $CountLabel
 # ...
 
 # ══ Lifecycle ═════════════════════════════════════════════════════════════════
@@ -467,13 +467,13 @@ func _ready() -> void:
     _enter_button.pressed.connect(func() -> void: enter_pressed.emit())
     _pass_button.pressed.connect(func() -> void: pass_pressed.emit())
 
-    if _lot_data != null:
+    if _entity_data != null:
         _apply()
 
 # ══ Common API ════════════════════════════════════════════════════════════════
 
-func setup(lot_data: LotData, index: int, total: int) -> void:
-    _lot_data = lot_data
+func setup(entity_data: ExampleEntityData, index: int, total: int) -> void:
+    _entity_data = entity_data
     _index = index
     _total = total
 

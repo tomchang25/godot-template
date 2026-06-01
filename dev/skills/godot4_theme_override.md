@@ -89,7 +89,7 @@ theme_override_colors/font_color = Color(1, 0, 0, 1)
 The original broken snippet fixed:
 
 ```gdscript
-func _make_price_row(entry: ItemEntry) -> HBoxContainer:
+func _make_value_row(entry: ExampleEntityData) -> HBoxContainer:
     var price_row := HBoxContainer.new()
     price_row.visible = false
     price_row.add_theme_constant_override("separation", 12)  # ✅

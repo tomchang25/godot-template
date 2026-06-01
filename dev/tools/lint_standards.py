@@ -16,7 +16,7 @@ Usage:
     python lint_standards.py --root .
 
     # Lint specific files (PostToolUse hook — only what changed):
-    python lint_standards.py --files game/run/auction/auction_scene.gd
+    python lint_standards.py --files game/example/example_scene.gd
 
 Exit code is 0 when clean, 1 when any violation is found.
 Stdlib only — no third-party imports, so the hook stays fast and import-safe.
@@ -35,7 +35,7 @@ from pathlib import Path
 # autoloads / global managers, resource definitions under data/, or common
 # framework scripts. We approximate that scope by directory.
 
-SCANNED_DIRS = ("game", "stage")
+SCANNED_DIRS = ("game",)
 EXCLUDED_PARTS = (".godot", "data", "global", "addons")
 
 # ── node-src markers ─────────────────────────────────────────────────────────

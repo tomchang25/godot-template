@@ -10,27 +10,20 @@ config_version=5
 
 [application]
 
-config/name="Lot and Haul"
+config/name="Godot Data-Driven Template"
 run/main_scene="uid://cexmpscene001"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
-EventBus="*uid://d2nkmaq8dlf5g"
-AudioManager="*uid://bhhaho37wph5e"
+EventBus="*res://global/autoload/event_bus.gd"
+AudioManager="*res://global/autoload/audio_manager/audio_manager.gd"
 RegistryCoordinator="*res://global/autoload/registry_coordinator.gd"
-ClueRegistry="*res://global/autoload/registries/clue_registry.gd"
-ItemRegistry="*uid://cog8cvjixi27d"
-RunManager="*uid://bioy5igkmc115"
-CarRegistry="*uid://y0kow3krldfr"
-LocationRegistry="*uid://cnpilh6m4wo27"
-CategoryRegistry="*res://global/autoload/registries/category_registry.gd"
-SuperCategoryRegistry="*res://global/autoload/registries/super_category_registry.gd"
-KnowledgeManager="*uid://bqosi6h0xps2v"
-SaveManager="*uid://bi0oymqq1g433"
-MetaManager="*res://global/autoload/meta_manager.gd"
-GameManager="*uid://bnj3y0a2848to"
+ExampleRegistry="*res://global/autoload/registry/example_registry.gd"
+ExampleSaveSection="*res://global/autoload/example_save_section.gd"
+SaveManager="*res://global/autoload/save_manager.gd"
+GameManager="*res://global/autoload/game_manager/game_manager.gd"
 
 [debug]
 
@@ -49,8 +42,7 @@ folder_colors={
 "res://common/": "red",
 "res://data/": "teal",
 "res://game/": "orange",
-"res://global/": "yellow",
-"res://stage/": "green"
+"res://global/": "yellow"
 }
 
 [physics]

@@ -19,17 +19,17 @@ Examples:
 
 ```
 player_controller.gd
-item_entry.gd
-item_row.gd
-run_record.gd
-lot_browse_scene.gd
+example_entity_data.gd
+entity_row.gd
+game_record.gd
+entity_list_scene.gd
 ```
 
 Scene files match their script names.
 
 ```
-cargo_scene.tscn
-cargo_scene.gd
+example_scene.tscn
+example_scene.gd
 ```
 
 ---
@@ -42,11 +42,10 @@ Examples:
 
 ```
 PlayerController
-ItemData
-ItemEntry
-ItemRow
-RunRecord
-StaminaHUD
+ExampleEntityData
+EntityRow
+GameRecord
+StatusHUD
 ```
 
 Only add `class_name` when the script needs to be referenced by type elsewhere.
@@ -257,8 +256,8 @@ If a `match` covers all members of a known enum exhaustively, the wildcard arm s
 
 | Type              | Style                         | Example                   |
 | ----------------- | ----------------------------- | ------------------------- |
-| Files             | snake_case                    | `item_row.gd`             |
-| Classes           | PascalCase                    | `ItemRow`                 |
+| Files             | snake_case                    | `entity_row.gd`           |
+| Classes           | PascalCase                    | `EntityRow`               |
 | Variables         | snake_case                    | `won_items`               |
 | Private variables | \_snake_case                  | `_rolled_price`           |
 | Functions         | snake_case                    | `setup()`                 |

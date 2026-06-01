@@ -1,49 +1,132 @@
-# Lot & Haul - YAML Generation Base Standard
+# Adding a New Entity Type to the Template
 
-Use this standard together with a data-type-specific prompt such as `item.md` or `category.md`.
+This guide walks through the full chain for introducing a new designer-authored resource type.
 
-## System Role
+## Overview
 
-You are a game data designer for a narrative auction game called "Lot & Haul".
-Your job is to generate designer-authored YAML data for the game's data pipeline.
+One entity type spans six layers:
 
-Players buy mystery lots at auction and identify items over time. Item knowledge is intentionally incomplete: early data should support ambiguity, discovery, and later verification.
+```
+data/definitions/<x>_data.gd                    # Resource class (fields)
+data/yaml/<x>.yaml                               # Authored content (human-edited)
+dev/tools/tres_lib/entities/<x>.py               # Pipeline spec (YAML → .tres)
+dev/tools/tres_lib/registry.py                   # Registers the spec
+data/tres/<x_plural>/                            # Generated .tres files (gitignored)
+global/autoload/registry/<x>_registry.gd         # Runtime loader (autoload)
+global/constants/data_paths.gd                   # Directory constant
+project.godot                                    # Autoload declaration
+```
 
-## Output Format Rules
+## Step-by-step
 
-- Output valid YAML only.
-- Do not use markdown code fences, headers, or prose around the YAML.
-- Do not explain, summarize, or comment on your output.
-- Do not create artifacts, canvas, or interactive documents.
-- Do not add YAML comments of any kind.
-- Do not add section headers or block separators.
-- Use two-space indentation.
-- Use snake_case for IDs.
-- IDs must be stable, readable, and unique within their resource type.
-- The example YAML in related prompts is for schema illustration only. Do not replicate its structure or pattern labels.
+### 1. Define the Resource class
 
-## ID Standards
+Create `data/definitions/<x>_data.gd`:
 
-- `category_id`: snake_case category identifier. Must match the generated `.tres` filename stem.
-- `layer_id`: snake_case identity layer identifier. Must be globally unique across generated layers.
-- `item_id`: snake_case item identifier. Must be globally unique across generated items.
-- Prefer short category prefixes for layer IDs, such as `bag_`, `watch_`, `lamp_`, `rifle_`.
-- Avoid opaque suffixes except for veil variants, where numbered suffixes are required.
+```gdscript
+# <x>_data.gd
+# Designer resource for <X>.
+class_name <X>Data
+extends Resource
 
-## Text Standards
+@export var <x>_id: String = ""
+@export var display_name: String = ""
+# Add your fields here.
+```
 
-- Player-facing display names should be concise and readable in UI.
-- Avoid names longer than 30 characters unless the data-type-specific prompt explicitly allows it.
-- Clue `known_text` must be three words or fewer. This applies to ALL clues, regardless of whether they carry a naming entry.
-- Prefer natural commercial or collector language over database-like phrasing.
-- Use ASCII unless the requested real-world name clearly requires a non-ASCII character.
-- **Forbidden `known_text` words.** The following game-mechanic and generic terms MUST NOT appear as any clue's `known_text`:
-  `Verified`, `Authentication`, `Authenticated`, `Authentic`, `Identified`, `Generic`, `Unknown`, `Checked`, `Confirmed`, `Validated`, `Appraised`, `Evaluated`
-  Clue text must describe a physical observation or historical detail, not a game state or process.
+Open the project in Godot once so the editor generates `<x>_data.gd.uid` sidecar.
 
-## Validation Principles
+### 2. Author YAML content
 
-- Every referenced ID must be defined in the same generated output or already exist in the project data, depending on the prompt.
-- Never generate duplicate IDs within the same output.
-- Never generate placeholder data like `example_item`, `TODO`, `unknown_category`, or `item_1`.
-- Generated YAML should be ready for the project's validator/generator without manual schema cleanup.
+Create `data/yaml/<x>.yaml`:
+
+```yaml
+<x_plural>:
+  - <x>_id: "my_first_<x>"
+    display_name: "My First X"
+```
+
+IDs must be snake_case, globally unique within their type, and stable once authored.
+
+### 3. Write the pipeline spec
+
+Copy `dev/tools/tres_lib/entities/example_entity.py` to `<x>.py`. Change:
+- `yaml_key` → `"<x_plural>"`
+- `tres_subdir` → `"<x_plural>"`
+- `uid_prefix` → `"<x>"`
+- `script_paths` → path to your `<x>_data.gd`
+- `build_tres()` → write your fields with `TresWriter`
+- `parse_tres()` → read them back
+- `validate()` → check required fields, cross-references
+
+If this entity cross-references another (e.g. points to a category), list the dependency before it in the registry.
+
+### 4. Register the spec
+
+In `dev/tools/tres_lib/registry.py`, add your spec to `REGISTRY` in dependency order:
+
+```python
+from tres_lib.entities.<x> import SPEC as <x>_spec
+
+REGISTRY = [
+    example_entity_spec,
+    <x>_spec,   # after any entities it references
+]
+```
+
+### 5. Generate .tres files
+
+```bash
+cd dev/tools
+python yaml_to_tres.py --godot-root ../..
+```
+
+Re-run whenever YAML is edited.
+
+### 6. Write the registry autoload
+
+Create `global/autoload/registry/<x>_registry.gd`:
+
+```gdscript
+# <x>_registry.gd
+# Autoload: loads all <X>Data resources. Access via <X>Registry.get_<x>_by_id(id).
+extends ResourceRegistry
+
+func _dir_path() -> String:
+    return DataPaths.<X_PLURAL>_DIR
+
+func _id_of(r: Resource) -> String:
+    return (r as <X>Data).<x>_id if r is <X>Data else ""
+
+func get_all_<x_plural>() -> Array[<X>Data]:
+    var result: Array[<X>Data] = []
+    for r: Resource in get_all():
+        result.append(r as <X>Data)
+    return result
+
+func get_<x>_by_id(id: String) -> <X>Data:
+    return get_by_id(id) as <X>Data
+```
+
+### 7. Wire up
+
+Add to `global/constants/data_paths.gd`:
+```gdscript
+const <X_PLURAL>_DIR: String = "res://data/tres/<x_plural>"
+```
+
+Add to `project.godot` `[autoload]` (after `RegistryCoordinator`, before `GameManager`):
+```
+<X>Registry="*res://global/autoload/registry/<x>_registry.gd"
+```
+
+### 8. Verify
+
+```bash
+cd dev/tools
+python yaml_to_tres.py --godot-root ../..
+python validate_yaml.py --yaml-dir ../../data/yaml
+python lint_standards.py --files ../../global/autoload/registry/<x>_registry.gd
+```
+
+Then open the project in Godot and confirm the registry loads without errors at boot.
