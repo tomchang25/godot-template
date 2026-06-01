@@ -1,6 +1,6 @@
 """
 validate_yaml.py
-Validate merged YAML data for the lot-and-haul data pipeline.
+Validate merged YAML data for the data pipeline.
 
 Can be used standalone (for CI, pre-commit hooks, or authoring-time checks)
 or imported by yaml_to_tres.py as part of the full TRES generation pipeline.
@@ -25,10 +25,9 @@ from tres_lib.registry import REGISTRY
 
 
 def validate(data: dict) -> list[str]:
-    """Validate merged YAML data, including embedded resource fields.
+    """Validate merged YAML data via each registered entity spec.
 
-    Returns list of error strings.
-    Empty list means OK."""
+    Returns list of error strings. Empty list means OK."""
     errors: list[str] = []
     for spec in REGISTRY:
         errors.extend(spec.validate(data.get(spec.yaml_key, []), data))
@@ -40,7 +39,7 @@ def validate(data: dict) -> list[str]:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Validate YAML data files for the lot-and-haul data pipeline."
+        description="Validate YAML data files for the data pipeline."
     )
     parser.add_argument(
         "--yaml-dir",
