@@ -23,7 +23,6 @@ func _ready() -> void:
 		_dir_path(),
 		func(r: Resource) -> String: return _id_of(r)
 	)
-	RegistryCoordinator.register(self)
 
 
 ## Returns the resource with the given id, or null if not found.

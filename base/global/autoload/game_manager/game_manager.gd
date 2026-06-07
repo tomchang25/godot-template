@@ -14,8 +14,6 @@ var _pending_payload: Variant = null
 
 
 func _ready() -> void:
-	RegistryCoordinator.run_migrations()
-	RegistryCoordinator.run_validation()
 	SaveManager.load()
 	SaveManager.run_validation()
 

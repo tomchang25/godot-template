@@ -19,7 +19,6 @@ config/icon="res://icon.svg"
 
 EventBus="*res://global/autoload/event_bus.gd"
 AudioManager="*res://global/autoload/audio_manager/audio_manager.gd"
-RegistryCoordinator="*res://global/autoload/registry_coordinator.gd"
 ExampleRegistry="*res://global/autoload/registry/example_registry.gd"
 SaveManager="*res://global/autoload/save_manager.gd"
 ExampleState="*res://global/autoload/example_state.gd"
