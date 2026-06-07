@@ -40,7 +40,7 @@ func _id_of(r: Resource) -> String:
 
 The base class handles `_ready()` (load + `RegistryCoordinator.register(self)`) and default `validate()` (non-empty check). Override `validate()` to add cross-reference checks. Add `migrate()` only if the registry must mutate save state at boot.
 
-`validate()` checks **authored content only** — that designer `.tres` files are well-formed and reference ids that exist. It **must not read live/save state**; validating restored save state (live ids still resolve) is the Owner's job in `from_dict`. See `dev/standards/owners.md`.
+`validate()` checks **authored content only** — that designer `.tres` files are well-formed and reference ids that exist. It **must not read live/save state**; validating restored save state (live ids still resolve) is the save provider's job, in its `from_dict` / `validate` (see the Save System section of `CLAUDE.md`).
 
 ## Required API
 

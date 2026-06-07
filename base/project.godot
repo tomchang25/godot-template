@@ -1,0 +1,54 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Godot Data-Driven Template"
+run/main_scene="uid://cexmpscene001"
+config/features=PackedStringArray("4.6", "Forward Plus")
+config/icon="res://icon.svg"
+
+[autoload]
+
+EventBus="*res://global/autoload/event_bus.gd"
+AudioManager="*res://global/autoload/audio_manager/audio_manager.gd"
+RegistryCoordinator="*res://global/autoload/registry_coordinator.gd"
+ExampleRegistry="*res://global/autoload/registry/example_registry.gd"
+SaveManager="*res://global/autoload/save_manager.gd"
+ExampleState="*res://global/autoload/example_state.gd"
+GameManager="*res://global/autoload/game_manager/game_manager.gd"
+
+[debug]
+
+gdscript/warnings/integer_division=0
+gdscript/warnings/inference_on_variant=0
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+
+[file_customization]
+
+folder_colors={
+"res://common/": "red",
+"res://data/": "teal",
+"res://game/": "orange",
+"res://global/": "yellow"
+}
+
+[physics]
+
+3d/physics_engine="Jolt Physics"
+
+[rendering]
+
+rendering_device/driver.windows="d3d12"

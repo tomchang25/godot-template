@@ -14,3 +14,7 @@
 **/*.db-journal
 
 **/__pycache__/
+
+# Composed projects (tools/compose.py output)
+/build/
+**/.opencode
