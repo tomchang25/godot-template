@@ -8,6 +8,10 @@ Append-only record of shipped work. This is the project's permanent "done" histo
 
 ## [unreleased]
 
+### baseline test, CI, and content pipelines
+- 2026-06-25 — [template] Added baseline GUT unit test runner, `--test-unit` boot path, GitHub CI headless/unit workflow, and VS Code tasks for unit tests, SFX, localization, and linting.
+- 2026-06-25 — [template] Added placeholder SFX generation, localization generation, agent rules, workflow command skeletons, and AI prompt pack skeletons for new composed projects.
+
 ### split into base + preset overlays
 - Restructured the repo into three layers: paradigm-neutral `base/`, plus `presets/sim-management/` and `presets/action-rpg/` overlays (`tools/compose.py` assembles base + one preset into `build/<preset>/`)
 - Made the base paradigm-neutral: rewrote `SaveManager` as a thin **provider** coordinator holding zero gameplay state (`register_provider` + `to_dict`/`from_dict`/`validate`); replaced the `ExampleOwner` reference with a neutral `ExampleState` provider; fixed autoload order so `SaveManager` precedes every provider

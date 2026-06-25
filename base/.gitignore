@@ -3,12 +3,11 @@
 
 **/shader_cache
 **/assets
-**/addons
 **/script_templates
 **/tres
+**/dev/tools/bin
 **/*_back
 
-**/*.uid
 **/*.tmp
 **/*.import
 **/*.db-journal

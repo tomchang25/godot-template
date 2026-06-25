@@ -3,7 +3,7 @@
 The data-injection half of the block-scene convention, specific to the UI-heavy
 sim-management paradigm. The **node-source rule** (persistent nodes live in `.tscn`,
 not `add_child()`; no `[connection]` in `.tscn`) is the neutral, lint-enforced half
-and stays in the base: `dev/standards/block_scene_architecture_standard.md`. This
+and stays in the base: `dev/standards/scene_node_source_standard.md`. This
 document adds the rule for *how data flows into a reusable component*.
 
 ## `setup()` is the apply function

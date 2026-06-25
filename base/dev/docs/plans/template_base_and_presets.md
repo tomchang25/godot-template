@@ -66,7 +66,7 @@ What stays in the neutral base vs what pushes down to a preset.
 - The four spines: `data/` pipeline + `dev/tools/` (yaml↔tres, validate, stats), `registry_coordinator.gd` + `resource_dir_loader.gd` + `registry/`, `save_manager.gd` (thin coordinator form), `game_manager/` routing.
 - Cross-cutting infra: `event_bus.gd`, `common/audio/`, `common/framework/state_machine/`, `common/utils/`, `global/theme/`.
 - Standards that don't dictate where logic lives: `naming_conventions.md`, `registries.md`, `standards_enforcement.md`, `implementation_spec_standard.md`, `plan_standard.md`, `conventional_commits`, and `project_structure.md` **skeleton only** (the top-level folder map, minus the `common/gameplay/{store,snapshot,service,entry}` taxonomy).
-- `block_scene_architecture_standard.md` **node-source rule only** (persistent nodes live in `.tscn`, not `add_child()`; no `[connection]` in `.tscn`) — this is genuinely neutral and lint-enforced for both paradigms.
+- `scene_node_source_standard.md` **node-source rule** (persistent nodes live in `.tscn`, not `add_child()`) and `gdscript_structure_standard.md` **signal connection rule** (no `[connection]` in `.tscn`) — these are genuinely neutral and lint-enforced for both paradigms.
 
 **Push to `sim-management` preset:**
 

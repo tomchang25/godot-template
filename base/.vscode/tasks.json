@@ -83,6 +83,76 @@
             "problemMatcher": []
         },
         {
+            "label": "Localization: YAML → CSV",
+            "type": "shell",
+            "command": "python",
+            "args": [
+                "${workspaceFolder}/dev/tools/localization_yaml_to_csv.py",
+                "--godot-root",
+                "${workspaceFolder}"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Localization: YAML → CSV (dry-run)",
+            "type": "shell",
+            "command": "python",
+            "args": [
+                "${workspaceFolder}/dev/tools/localization_yaml_to_csv.py",
+                "--godot-root",
+                "${workspaceFolder}",
+                "--dry-run"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Render SFX",
+            "type": "shell",
+            "command": "python",
+            "args": [
+                "${workspaceFolder}/dev/tools/render_sfx.py",
+                "--dir",
+                "${workspaceFolder}/data/yaml/sfx/",
+                "--godot-root",
+                "${workspaceFolder}"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Render SFX (dry-run)",
+            "type": "shell",
+            "command": "python",
+            "args": [
+                "${workspaceFolder}/dev/tools/render_sfx.py",
+                "--dir",
+                "${workspaceFolder}/data/yaml/sfx/",
+                "--godot-root",
+                "${workspaceFolder}",
+                "--dry-run"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
             "label": "Standards: lint all",
             "type": "shell",
             "command": "python",
@@ -113,6 +183,38 @@
             "presentation": {
                 "reveal": "always",
                 "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Lint all",
+            "dependsOn": [
+                "Standards: lint all"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "CI: unit tests",
+            "type": "shell",
+            "command": "godot_console",
+            "args": [
+                "--headless",
+                "--path",
+                "${workspaceFolder}",
+                "--test-unit"
+            ],
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
             },
             "problemMatcher": []
         }

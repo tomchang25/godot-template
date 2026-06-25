@@ -27,7 +27,7 @@ PRESETS = REPO / "presets"
 # Never copied from base into a composed project (regenerated or VCS/tooling).
 IGNORE = shutil.ignore_patterns(
     ".godot", ".git", ".import", "__pycache__", "*.tmp", "build",
-    ".opencode", ".claude", ".commitsage", "*.uid",
+    ".opencode", ".claude", ".commitsage",
 )
 
 FRAGMENT_NAME = "project.autoload.fragment.cfg"

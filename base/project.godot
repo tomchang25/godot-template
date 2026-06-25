@@ -47,6 +47,11 @@ folder_colors={
 "res://global/": "yellow"
 }
 
+[internationalization]
+
+locale/translations=PackedStringArray("res://localization/generated/ui.en.translation", "res://localization/generated/ui.zh_TW.translation", "res://localization/generated/ui.zh_CN.translation", "res://localization/generated/system.en.translation", "res://localization/generated/system.zh_TW.translation", "res://localization/generated/system.zh_CN.translation")
+locale/test="en"
+
 [physics]
 
 3d/physics_engine="Jolt Physics"

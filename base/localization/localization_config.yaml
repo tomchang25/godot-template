@@ -1,0 +1,13 @@
+locales:
+  - id: en
+    fallbacks: []
+    label: English
+  - id: zh_TW
+    fallbacks: [zh_CN, en]
+    label: Traditional Chinese
+  - id: zh_CN
+    fallbacks: [zh_TW, en]
+    label: Simplified Chinese
+blocks:
+  - ui
+  - system
