@@ -2,7 +2,7 @@
 
 `base` + this overlay = a Godot project for **real-time / spatial / many-entity**
 games. The convention it adds is *distributed state*: logic and state live on entity
-Component nodes, with a per-frame driver — no Store/Manager layer.
+Component nodes, with a per-frame driver — no Store/System layer.
 
 ```
 action-rpg/
@@ -13,7 +13,7 @@ action-rpg/
   overlay/                        copied on top of base by tools/compose.py
     common/gameplay/components/   Health, Hurtbox, Hitbox
     common/gameplay/entity/       Entity base
-    global/autoload/              node_pool.gd, world_state.gd
+    global/autoloads/             node_pool.gd, world_state.gd
     game/example_arpg/            player, enemy, arena (combat slice)
     project.autoload.fragment.cfg
 ```

@@ -12,7 +12,7 @@ data/yaml/<x>.yaml                               # Authored content (human-edite
 dev/tools/tres_lib/entities/<x>.py               # Pipeline spec (YAML → .tres)
 dev/tools/tres_lib/registry.py                   # Registers the spec
 data/tres/<x_plural>/                            # Generated .tres files (gitignored)
-global/autoload/registry/<x>_registry.gd         # Runtime loader (autoload)
+global/autoloads/registries/<x>_registry.gd      # Runtime loader (autoload)
 global/constants/data_paths.gd                   # Directory constant
 project.godot                                    # Autoload declaration
 ```
@@ -85,7 +85,7 @@ Re-run whenever YAML is edited.
 
 ### 6. Write the registry autoload
 
-Create `global/autoload/registry/<x>_registry.gd`:
+Create `global/autoloads/registries/<x>_registry.gd`:
 
 ```gdscript
 # <x>_registry.gd
@@ -115,9 +115,9 @@ Add to `global/constants/data_paths.gd`:
 const <X_PLURAL>_DIR: String = "res://data/tres/<x_plural>"
 ```
 
-Add to `project.godot` `[autoload]` (after `RegistryCoordinator`, before `GameManager`):
+Add to `project.godot` `[autoload]` (before `SaveManager`):
 ```
-<X>Registry="*res://global/autoload/registry/<x>_registry.gd"
+<X>Registry="*res://global/autoloads/registries/<x>_registry.gd"
 ```
 
 ### 8. Verify
@@ -126,7 +126,7 @@ Add to `project.godot` `[autoload]` (after `RegistryCoordinator`, before `GameMa
 cd dev/tools
 python yaml_to_tres.py --godot-root ../..
 python validate_yaml.py --yaml-dir ../../data/yaml
-python lint_standards.py --files ../../global/autoload/registry/<x>_registry.gd
+python lint_standards.py --files ../../global/autoloads/registries/<x>_registry.gd
 ```
 
 Then open the project in Godot and confirm the registry loads without errors at boot.

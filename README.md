@@ -32,7 +32,7 @@ convention on top, without copying any spine.
 ## The base (what's shared)
 
 - **Four spines**: data pipeline (YAML→tres→registry), boot orchestration
-  (`RegistryCoordinator`), save system (thin provider-based `SaveManager`), scene
+  (autoloaded registries), save system (thin provider-based `SaveManager`), scene
   routing (`GameManager`).
 - **Neutral standards**: naming, project structure (skeleton), registries, lint
   enforcement, plan/spec standards, commits, and the block-scene **node-source rule**.
@@ -43,9 +43,9 @@ See `base/CLAUDE.md`.
 
 ## The presets (what differs)
 
-**`sim-management`** — a Store/Manager model layer: serialisable, mutation-guarded
+**`sim-management`** — a Store/System model layer: serialisable, mutation-guarded
 **Stores** held by a **Manager** that is the sole mutation gateway and the save
-provider; the Store/Snapshot/Service/Instance archetype taxonomy; the
+provider; the Store/Snapshot/Service/Entry archetype taxonomy; the
 `setup()`/`_apply()` block-scene data-flow convention. The idle variant is the same
 preset plus a tick/offline-resolution driver. See `presets/sim-management/CLAUDE.md`.
 
@@ -70,5 +70,5 @@ A spine fix is made once in `base/` and both presets inherit it on the next comp
 ## Design rationale
 
 The full plan and the reasoning behind the split (including the supersession of the
-base Owner pattern by the Store/Manager model) live in
+base Owner pattern by the Store/System model) live in
 `base/dev/docs/plans/template_base_and_presets.md`.

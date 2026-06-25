@@ -2,7 +2,7 @@
 # Inventory domain Store: the set of example-entity ids the player has collected.
 # Reference Store showing referential-integrity validation — on load, ids that no
 # longer resolve against ExampleRegistry are dropped with a warning rather than
-# faulting the load. Held by GameStateManager.
+# faulting the load. Held by ExampleSystem.
 class_name InventoryStore
 extends StoreBase
 

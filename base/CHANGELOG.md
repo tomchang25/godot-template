@@ -11,8 +11,8 @@ Append-only record of shipped work. This is the project's permanent "done" histo
 ### split into base + preset overlays
 - Restructured the repo into three layers: paradigm-neutral `base/`, plus `presets/sim-management/` and `presets/action-rpg/` overlays (`tools/compose.py` assembles base + one preset into `build/<preset>/`)
 - Made the base paradigm-neutral: rewrote `SaveManager` as a thin **provider** coordinator holding zero gameplay state (`register_provider` + `to_dict`/`from_dict`/`validate`); replaced the `ExampleOwner` reference with a neutral `ExampleState` provider; fixed autoload order so `SaveManager` precedes every provider
-- Demoted the Owner pattern (`owners.md`, `example_owner.gd`) out of the base; it is superseded by the Store/Manager model in the sim-management preset
-- `sim-management` preset: `StoreBase` + reference `EconomyStore`/`InventoryStore`, a `GameStateManager` that holds the Stores and owns transactions, the `store_manager.md` standard, the Store/Snapshot/Service/Instance archetype taxonomy, the `setup()`/`_apply()` data-flow convention, and an `example_sim` reference scene
+- Demoted the Owner pattern (`owners.md`, `example_owner.gd`) out of the base; it is superseded by the Store/System model in the sim-management preset
+- `sim-management` preset: `StoreBase` + reference `EconomyStore`/`InventoryStore`, an `ExampleSystem` that holds the Stores and owns transactions, the `store_manager.md` standard, the Store/Snapshot/Service/Entry archetype taxonomy, the `setup()`/`_apply()` data-flow convention, and an `example_sim` reference scene
 - `action-rpg` preset: `Health`/`Hurtbox`/`Hitbox` component nodes, an `Entity` base, a `NodePool`, a `WorldState` snapshot save provider, the `component_architecture.md` standard, and an `example_arpg` combat slice (player + pooled enemies + a real-time arena driver)
 
 ### template extracted from lot-and-haul

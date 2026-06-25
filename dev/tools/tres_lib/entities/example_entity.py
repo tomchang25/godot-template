@@ -6,7 +6,7 @@ Steps:
   2. Add data/yaml/<x>.yaml with your entries.
   3. Copy this spec, change yaml_key / tres_subdir / uid_prefix / script_paths.
   4. Register the SPEC in tres_lib/registry.py.
-  5. Create global/autoload/registry/<x>_registry.gd extends ResourceRegistry.
+  5. Create global/autoloads/registries/<x>_registry.gd extends ResourceRegistry.
   6. Add to project.godot autoloads + DataPaths constant.
 """
 

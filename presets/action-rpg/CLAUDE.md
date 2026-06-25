@@ -33,7 +33,7 @@ omits: **where game logic lives** (here: on the entity).
 ```
 common/gameplay/components/health.gd | hurtbox.gd | hitbox.gd
 common/gameplay/entity/entity.gd
-global/autoload/node_pool.gd | world_state.gd
+global/autoloads/node_pool.gd | world_state.gd
 game/example_arpg/player.tscn | enemy.tscn | arena_scene.tscn  (+ .gd)
 project.autoload.fragment.cfg   adds NodePool + WorldState; sets main scene
 ```
@@ -44,8 +44,8 @@ Hitbox; the player's attack Hitbox damages enemy Hurtboxes.
 
 ## Autoload order (composed)
 
-`EventBus → AudioManager → RegistryCoordinator → ExampleRegistry → SaveManager →
-ExampleState → NodePool → WorldState → GameManager`
+`EventBus → SettingsStore → ToastManager → AudioManager → ExampleRegistry → SaveManager →
+ExampleState → SceneRouter → NodePool → WorldState → GameManager`
 
 `WorldState` is a save provider, so it follows `SaveManager`. `GameManager` is last.
 

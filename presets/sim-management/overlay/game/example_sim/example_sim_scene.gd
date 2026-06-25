@@ -1,11 +1,11 @@
 # example_sim_scene.gd
-# Block 01 (sim-management) — reference scene for the Store/Manager model.
+# Block 01 (sim-management) — reference scene for the Store/System model.
 # Lists example entities; each can be BOUGHT for its value, which spends cash
 # (EconomyStore) and adds it to inventory (InventoryStore) via a single
-# GameStateManager transaction. Demonstrates: Manager-gated mutation, Store reads,
+# ExampleSystem transaction. Demonstrates: System-gated mutation, Store reads,
 # SaveManager save/load, EventBus signal.
-# Reads:  GameStateManager.economy.cash, GameStateManager.inventory.collected_ids
-# Writes: (none directly — all writes go through GameStateManager transactions)
+# Reads:  ExampleSystem.economy.cash, ExampleSystem.inventory.collected_ids
+# Writes: (none directly — all writes go through ExampleSystem transactions)
 extends Control
 
 # ── Node references ───────────────────────────────────────────────────────────
@@ -32,8 +32,8 @@ func _ready() -> void:
 func _on_entity_selected(index: int) -> void:
 	var entity_id: String = _entity_list.get_item_metadata(index)
 	var entity: ExampleEntityData = ExampleRegistry.get_example_by_id(entity_id)
-	# Mutation goes through the Manager — the scene never touches a Store directly.
-	GameStateManager.buy_entity(entity)
+	# Mutation goes through the System — the scene never touches a Store directly.
+	ExampleSystem.buy_entity(entity)
 	_refresh()
 
 
@@ -47,15 +47,15 @@ func _on_load_pressed() -> void:
 
 
 func _on_reset_pressed() -> void:
-	GameStateManager.reset_all()
+	ExampleSystem.reset_all()
 	_refresh()
 
 
 # ══ View ══════════════════════════════════════════════════════════════════════
 
 func _refresh() -> void:
-	_cash_label.text = "Cash: %d" % GameStateManager.economy.cash
-	var owned: Array[String] = GameStateManager.inventory.collected_ids
+	_cash_label.text = "Cash: %d" % ExampleSystem.economy.cash
+	var owned: Array[String] = ExampleSystem.inventory.collected_ids
 	_entity_list.clear()
 	for entity: ExampleEntityData in ExampleRegistry.get_all_examples():
 		var is_owned: bool = owned.has(entity.entity_id)

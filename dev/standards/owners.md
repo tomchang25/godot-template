@@ -11,7 +11,7 @@ An **Owner** is the single authority for one domain (economy, garage, storage, �
 3. **Validate** — sanitizes its own restored state: ids that no longer resolve are dropped with `push_warning`, never a fault.
 4. **Migrate** — maps its own legacy save shapes (renamed/removed fields) onto the current ones.
 
-The reference implementation is `global/autoload/example_owner.gd`.
+The reference implementation is `global/autoloads/example_owner.gd`.
 
 ### Owner vs. "save section"
 
@@ -38,7 +38,7 @@ These two axes are easy to conflate. The rule:
 
 | Thing | Location |
 | --- | --- |
-| Script | `global/autoload/<domain>_owner.gd` |
+| Script | `global/autoloads/<domain>_owner.gd` |
 | Class name in save file | `section_id()` returns `"<domain>"` |
 | Autoload registration | `project.godot`, after registries it reads, before `SaveManager` |
 | Self-registration | `SaveManager.register_section(self)` in `_ready()` |
@@ -64,7 +64,7 @@ Introduce a **coordinator** (a node holding several `RefCounted` Owners) only wh
 
 ## Checklist for a new Owner
 
-1. Script at `global/autoload/<domain>_owner.gd`, header comment lists the four responsibilities.
+1. Script at `global/autoloads/<domain>_owner.gd`, header comment lists the four responsibilities.
 2. Live fields as `var`s with `##` docs. This Owner is the only writer.
 3. `section_id()` returns a unique `"<domain>"` key.
 4. `to_dict()` serializes; `from_dict()` does migrate → read → validate.

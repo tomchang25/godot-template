@@ -2,11 +2,11 @@
 
 The "where does logic live" convention of the **action-rpg** preset — real-time,
 spatial, many entities, per-frame updates. It is the deliberate opposite of the
-sim-management preset's centralised Store/Manager model: here, **state and behaviour
+sim-management preset's centralised Store/System model: here, **state and behaviour
 are distributed onto the entity**, as Component nodes.
 
 This convention is not in the neutral base. It replaces the sim preset's
-Store/Manager standard and runtime-type archetypes.
+Store/System standard and runtime-type archetypes.
 
 ## Entity = composed scene
 
@@ -89,14 +89,14 @@ keep purely-local behaviour (this entity's movement from its own input) on the e
 Spawn-heavy entities (projectiles, hit numbers, common enemies) should be pooled, not
 freed, to avoid per-frame instantiation spikes. A pool acquires a node and calls
 `reset()`; on release it calls `set_enabled(false)` and parks the node. This is why
-the Component lifecycle hooks exist. See `overlay/global/autoload/node_pool.gd`.
+the Component lifecycle hooks exist. See `overlay/global/autoloads/node_pool.gd`.
 
 ## Persistence
 
 Entities own their state, so the save provider for a real-time game serialises a
 **snapshot** of the entities that must persist (player stats, position, world
 progress) at save points — it does not own that state during play. Reference:
-`overlay/global/autoload/world_state.gd`, a provider that reads the player's `Health`
+`overlay/global/autoloads/world_state.gd`, a provider that reads the player's `Health`
 and position into the save and writes them back on load. The base save *contract*
 (`to_dict`/`from_dict`/`validate` + `register_provider`) is unchanged.
 

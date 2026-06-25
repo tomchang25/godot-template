@@ -20,7 +20,7 @@ The sandboxed Linux shell can return **phantom file corruption** for files in th
 ## The Four Spines
 
 1. **Data pipeline** — YAML (human-authored) → `.tres` (generated) → `ResourceDirLoader` → Registry → game reads.
-2. **Boot orchestration** — `RegistryCoordinator` unifies register / migrate / validate lifecycle across all registries.
+2. **Boot orchestration** — registries autoload before save providers, load their resources in `_ready()`, and are validated during boot.
 3. **Save system** — Section-based JSON: state-owning objects register themselves as **providers** with `SaveManager`, which fans `to_dict`/`from_dict`/`validate` out to them. `SaveManager` holds no gameplay state. The base takes no position on how a project groups the things that own state — that is a preset decision.
 4. **Scene routing** — `GameManager._SCENES` dict + `go_to(key, payload)` + `consume_payload()`.
 
@@ -47,8 +47,8 @@ dev/              Development tooling and documentation
 game/             Game feature scenes
   example/        Template demo scene (full chain: registry → save → routing)
 global/           Autoloads and project-wide resources
-  autoload/       All autoload scripts
-    registry/     ResourceRegistry base + per-type registries
+  autoloads/      All autoload scripts
+    registries/   ResourceRegistry base + per-type registries
   constants/      DataPaths
   theme/          Main theme resource
   utils/          RegistryAudit utility
@@ -57,16 +57,14 @@ localization/     Localization files (empty, planned)
 
 ## Autoloads (load order)
 
-`EventBus → AudioManager → RegistryCoordinator → ExampleRegistry → SaveManager → ExampleState → GameManager`
+`EventBus → SettingsStore → ToastManager → AudioManager → ExampleRegistry → SaveManager → ExampleState → SceneRouter → GameManager`
 
 `SaveManager` is listed **before** any save provider, because each provider's
 `_ready()` calls `SaveManager.register_provider(self)` — an autoload can only reach
 autoloads defined above it during `_ready()`. `GameManager` is last and drives boot:
-`run_migrations()` → `run_validation()` → `SaveManager.load()` → `SaveManager.run_validation()`.
+`SaveManager.load()` → `SaveManager.run_validation()`.
 
-`RegistryCoordinator` orchestrates boot: registries call `register(self)` in `_ready()`, then `GameManager._ready()` calls `run_migrations()` and `run_validation()`.
-
-When adding a new registry, insert it after `RegistryCoordinator` and before `SaveManager`.
+When adding a new registry, insert it after `AudioManager` and before `SaveManager`.
 
 ## Data Pipeline
 
@@ -100,9 +98,9 @@ in `project.godot`. Boundaries: whole-file / `schema_version` migration lives in
 migration lives in the provider's `from_dict()`; authored-content validation lives
 in the Registry's `validate()`, which must not read live/save state.
 
-The base ships exactly one provider, `global/autoload/example_state.gd`, as the
+The base ships exactly one provider, `global/autoloads/example_state.gd`, as the
 neutral reference. **How a real project organises the many objects that own state is
-a preset decision** — the `sim-management` preset layers a Store/Manager model on top
+a preset decision** — the `sim-management` preset layers a Store/System model on top
 of this contract; the `action-rpg` preset distributes state onto entity components.
 
 ## Scene Routing

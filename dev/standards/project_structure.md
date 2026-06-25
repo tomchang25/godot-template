@@ -132,7 +132,7 @@ For the current list of registered autoloads and their load order, see `project.
 | Code-generated runtime data structures               | `game/<feature>/` or `game/shared/` |
 | Feature scene roots, UI components, logic            | `game/<feature>/`                 |
 | UI helpers shared across multiple features           | `game/shared/`                    |
-| Global autoloads                                     | `global/autoload/`                |
-| Per-type registry autoloads                          | `global/autoload/registry/`       |
+| Global autoloads                                     | `global/autoloads/`               |
+| Per-type registry autoloads                          | `global/autoloads/registries/`    |
 | Tooling scripts                                      | `dev/tools/`                      |
 | Localization files                                   | `localization/`                   |

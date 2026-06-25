@@ -1,9 +1,9 @@
-# Store / Manager Standard
+# Store / System Standard
 
 The model-layer convention of the **sim-management** preset. It supersedes the
 base's monolithic Owner pattern for turn/idle/management games: it splits the
 *model* (Store — serialisable, mutation-guarded state) from *orchestration*
-(Manager — transactions, cross-domain coordination, the save point).
+(System — transactions, cross-domain coordination, the save point).
 
 This convention is **not** part of the neutral base. The base ships only the save
 *contract* (`to_dict`/`from_dict`/`validate` + `SaveManager.register_provider`);
@@ -26,20 +26,20 @@ them. It extends `StoreBase` (a `RefCounted`) and lives in
 5. **Validate** — referential integrity of restored state; drop unresolved ids with
    `push_warning`, never fault.
 
-A Store has **no reference to its Manager, to scenes, or to other Stores**. It is a
+A Store has **no reference to its System, to scenes, or to other Stores**. It is a
 pure, testable state slice. Persisting Stores override all four save methods;
 session-scoped Stores (cleared each run, never saved) override none.
 
 Reference: `common/gameplay/store/economy_store.gd`, `inventory_store.gd`,
 `store_base.gd`.
 
-### Manager — the orchestration
+### System — the orchestration
 
-A **Manager** is an autoload that holds one or more Stores as plain public fields,
+A **System** is an autoload that holds one or more Stores as plain public fields,
 and is the **sole mutation gateway** to them. It lives in
-`global/autoload/managers/`.
+`global/autoloads/systems/`.
 
-- Holds Stores: `var economy: EconomyStore` — scenes read `Manager.economy.cash`
+- Holds Stores: `var economy: EconomyStore` — scenes read `ExampleSystem.economy.cash`
   directly, but never write a Store.
 - Owns **transactions** — a single method that may touch several Stores and then
   calls `SaveManager.save()` exactly once at the commit point (e.g. `buy_entity()`
@@ -47,24 +47,24 @@ and is the **sole mutation gateway** to them. It lives in
 - Is the save **provider**: `SaveManager.register_provider(self)` in `_ready()`,
   and `to_dict`/`from_dict`/`validate` fan out across its Stores.
 
-Reference: `global/autoload/managers/game_state_manager.gd`.
+Reference: `global/autoloads/systems/example_system.gd`.
 
 ## Why the split (vs the base Owner)
 
 The base Owner fused model and orchestration in one autoload per domain. For a
 sim/management game that grows cross-domain transactions ("end the day" touches
-economy + storage + progress), that fusion forces either a god-Owner or a tangle
+  economy + storage + progress), that fusion forces either a god-Owner or a tangle
 of Owner-to-Owner calls. Splitting gives:
 
 - a **model layer** (Stores) that is serialisable and unit-testable without the tree;
-- an **orchestration layer** (Manager) that owns multi-Store transactions and the
+- an **orchestration layer** (System) that owns multi-Store transactions and the
   single save point;
 - a clean path to the **idle variant** — pure Stores advanced by pure Services let
   offline resolution re-run the same math over an elapsed interval.
 
-## Direct call vs event (cross-manager)
+## Direct call vs event (cross-system)
 
-When one Manager's correctness depends on another's result, **direct call** and gate
+When one System's correctness depends on another's result, **direct call** and gate
 on the return (`if not economy.spend(cost): return false` — a failed spend rolls the
 transaction back). When the caller does not care about the outcome, emit an
 **EventBus** signal (broadcast `example_entity_collected` so other systems can react;
@@ -97,8 +97,8 @@ func from_dict(data: Dictionary) -> void:
    invariants.
 3. `section_id()`, `to_dict()` (with `"_version"`), `from_dict()` (migrate → read),
    `validate()` (drop unresolved ids with `push_warning`).
-4. The owning Manager `.new()`s the Store in `_ready()` and adds it to its
+4. The owning System `.new()`s the Store in `_ready()` and adds it to its
    `to_dict`/`from_dict`/`validate` fan-out.
-5. Mutations to the Store happen **only** inside Manager transaction methods, each
+5. Mutations to the Store happen **only** inside System transaction methods, each
    ending in a single `SaveManager.save()` at its commit point.
 6. No Store ↔ Store references; no Store → scene references.

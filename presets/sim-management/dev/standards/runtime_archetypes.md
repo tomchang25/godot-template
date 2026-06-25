@@ -11,10 +11,10 @@ clearly fit, stop and ask before naming it.
 
 | Archetype | Subfolder | What it is | Saves? | Mutable? |
 | --- | --- | --- | --- | --- |
-| **Store** | `store/` | Manager-held domain state container with invariant-guarding mutators | persisting Stores yes | yes (via mutators) |
+| **Store** | `store/` | System-held domain state container with invariant-guarding mutators | persisting Stores yes | yes (via mutators) |
 | **Snapshot** | `snapshot/` | read-only value object, computed once then discarded (e.g. a `DaySummary`, a `RunResult`) | no | no |
 | **Service** | `service/` | stateless pure-math helper (e.g. `SellMath`, a research-slot calculator) | no | no state |
-| **Instance** | `instance/` | live instance of a designer `Data` — identity + mutable state + self-maintaining behaviour (e.g. an `ItemEntry` wrapping `ItemData`) | yes (inside a Store) | yes |
+| **Entry** | `entry/` | live instance of a designer `Data` — identity + mutable state + self-maintaining behaviour (e.g. an `ItemEntry` wrapping `ItemData`) | yes (inside a Store) | yes |
 
 ## Discriminator
 
@@ -22,8 +22,8 @@ Ask, in order:
 
 1. **No state at all, just functions over inputs?** → Service.
 2. **Read-only, computed once and thrown away?** → Snapshot.
-3. **A saved, mutable instance of a designer `Data` resource?** → Instance.
-4. **Manager-held, mutable, the domain's state container?** → Store.
+3. **A saved, mutable instance of a designer `Data` resource?** → Entry.
+4. **System-held, mutable, the domain's state container?** → Store.
 
 ## Notes
 
@@ -32,9 +32,9 @@ Ask, in order:
   yourself wanting to save a Snapshot, it's actually a Store.
 - **Service vs Store**: a Service never holds state between calls. The moment a
   "helper" needs to remember something across calls, it's a Store.
-- **Instance vs Data**: `Data` (under `data/definitions/`) is the designer-authored
-  template, loaded from `.tres`. An Instance is one live, mutating copy the player
-  owns. Instances are serialised as part of the Store that holds them — they don't
+- **Entry vs Data**: `Data` (under `data/definitions/`) is the designer-authored
+  template, loaded from `.tres`. An Entry is one live, mutating copy the player
+  owns. Entries are serialised as part of the Store that holds them — they don't
   register with `SaveManager` themselves.
-- Pass **Resource refs / Instances**, not ids, across boundaries. String ids are for
+- Pass **Resource refs / Entries**, not ids, across boundaries. String ids are for
   save/load only.

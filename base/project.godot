@@ -17,12 +17,15 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-EventBus="*res://global/autoload/event_bus.gd"
-AudioManager="*res://global/autoload/audio_manager/audio_manager.gd"
-ExampleRegistry="*res://global/autoload/registry/example_registry.gd"
-SaveManager="*res://global/autoload/save_manager.gd"
-ExampleState="*res://global/autoload/example_state.gd"
-GameManager="*res://global/autoload/game_manager/game_manager.gd"
+EventBus="*res://global/autoloads/event_bus.gd"
+SettingsStore="*res://global/autoloads/settings_store.gd"
+ToastManager="*res://global/autoloads/toast_manager.gd"
+AudioManager="*res://global/autoloads/audio_manager/audio_manager.gd"
+ExampleRegistry="*res://global/autoloads/registries/example_registry.gd"
+SaveManager="*res://global/autoloads/save_manager.gd"
+ExampleState="*res://global/autoloads/example_state.gd"
+SceneRouter="*res://global/autoloads/scene_router/scene_router.gd"
+GameManager="*res://global/autoloads/game_manager/game_manager.gd"
 
 [debug]
 

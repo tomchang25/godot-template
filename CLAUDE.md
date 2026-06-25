@@ -6,7 +6,7 @@ This repo is a three-layer Godot 4.6 template: a paradigm-neutral **base** plus 
 
 ```
 base/                      neutral Godot project — the four spines.   guide: base/CLAUDE.md
-presets/sim-management/    Store/Manager (turn/idle/UI).  guide: presets/sim-management/CLAUDE.md
+presets/sim-management/    Store/System (turn/idle/UI).  guide: presets/sim-management/CLAUDE.md
 presets/action-rpg/        Components (real-time).        guide: presets/action-rpg/CLAUDE.md
 tools/compose.py           base + preset -> build/<preset>/
 ```
@@ -16,7 +16,7 @@ tools/compose.py           base + preset -> build/<preset>/
 - A fix to a **spine** (data pipeline, boot, save coordinator, scene routing) or a
   neutral standard → `base/`. Both presets inherit it on the next compose. **Never**
   add a "where logic lives" convention to the base — that's what breaks the model.
-- A change to the **Store/Manager** model, archetype taxonomy, or `setup()`/`_apply()`
+- A change to the **Store/System** model, archetype taxonomy, or `setup()`/`_apply()`
   convention → `presets/sim-management/`.
 - A change to **components**, the real-time loop, pooling, or entity layout →
   `presets/action-rpg/`.

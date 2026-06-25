@@ -1,7 +1,7 @@
 # economy_store.gd
 # Economy domain Store: cash on hand. Reference Store showing the full shape —
 # private backing field, read-only public getter, mutation-guarded operations,
-# save payload, and per-store migration. Held by GameStateManager.
+# save payload, and per-store migration. Held by ExampleSystem.
 #
 # Fields are read-public via getters. There is no external setter, so the only
 # write path is through the operations below (and thus through the Manager).
@@ -24,18 +24,22 @@ func can_afford(amount: int) -> bool:
 
 
 ## Deducts [param amount]. Refuses (returns false) if cash would go negative.
-## Asserts non-negative input — a negative amount is a caller bug.
+## Guards non-negative input — a negative amount is a caller bug.
 func spend(amount: int) -> bool:
-	assert(amount >= 0, "spend() expects a non-negative amount")
+	if amount < 0:
+		ToastManager.show_dev_error("spend() expects a non-negative amount")
+		return false
 	if _cash < amount:
 		return false
 	_cash -= amount
 	return true
 
 
-## Adds [param amount] to cash. Asserts non-negative input.
+## Adds [param amount] to cash. Guards non-negative input.
 func earn(amount: int) -> void:
-	assert(amount >= 0, "earn() expects a non-negative amount")
+	if amount < 0:
+		ToastManager.show_dev_error("earn() expects a non-negative amount")
+		return
 	_cash += amount
 
 
