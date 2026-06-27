@@ -95,20 +95,20 @@ Rules:
 Variable groups at the top of the file use the single-line (`--`) format.
 
 ```gdscript
-# -- Group name ----------------------------------------------------------------
+# -- Group name --
 ```
 
-The dashes extend to about column 80. Use a consistent label from the table below.
+Use a consistent label from the table below.
 
 Standard variable groups, in order:
 
 | Header | Contents |
 | --- | --- |
-| `# -- Constants --...` | `const` and `preload` |
-| `# -- Exports --...` | `@export` vars |
-| `# -- State --...` | Runtime logic variables |
-| `# -- Timer / tween handles --...` | `Timer`, `Tween` vars |
-| `# -- Node references --...` | `@onready` node references bound to `.tscn` nodes via `%UniqueName` |
+| `# -- Constants --` | `const` and `preload` |
+| `# -- Exports --` | `@export` vars |
+| `# -- State --` | Runtime logic variables |
+| `# -- Timer / tween handles --` | `Timer`, `Tween` vars |
+| `# -- Node references --` | `@onready` node references bound to `.tscn` nodes via `%UniqueName` |
 
 Rules:
 
@@ -122,10 +122,10 @@ Rules:
 Function groups use the double-line (`==`) format.
 
 ```gdscript
-# == Section name ==============================================================
+# == Section name ==
 ```
 
-The `=` characters extend to about column 80.
+Use ASCII `=` and `-` header characters. Do not pad headers to a fixed column.
 
 ---
 
@@ -151,7 +151,7 @@ Feature section 2
 Placed immediately after `class_name` / `extends` and before constants, variables, and function sections.
 
 ```gdscript
-# == Inner classes =============================================================
+# == Inner classes ==
 
 class _ClassName extends BaseClass:
     ...
@@ -173,7 +173,7 @@ remaining virtual methods
 No private helpers here. Helpers belong in their feature section.
 
 ```gdscript
-# == Lifecycle ================================================================
+# == Lifecycle ==
 
 func _ready() -> void:
     ...
@@ -191,7 +191,7 @@ Methods overriding a non-Godot base class contract go after Godot lifecycle and 
 Contains only `_on_xxx()` callbacks. No public functions. No logic helpers.
 
 ```gdscript
-# == Signal handlers ===========================================================
+# == Signal handlers ==
 
 func _on_confirm_pressed() -> void:
     ...
@@ -205,7 +205,7 @@ func _on_cancel_pressed() -> void:
 All public methods that other scripts may call go here, including public static methods such as `from_dict()` and paired instance methods such as `to_dict()`. Do not split public static methods into a separate main section.
 
 ```gdscript
-# == Common API ================================================================
+# == Common API ==
 
 static func from_dict(data: Dictionary) -> EntryType:
     ...
@@ -222,12 +222,12 @@ func setup(entry: EntryType) -> void:
 Domain-specific private implementation groups. Feature sections contain private helpers only; move public methods to `Common API` even when they belong to a specific domain concept.
 
 ```gdscript
-# == Rows =====================================================================
+# == Rows ==
 
 func _populate_rows() -> void:
     ...
 
-# == Result ===================================================================
+# == Result ==
 
 func _commit_result() -> void:
     ...
@@ -246,7 +246,7 @@ Long functions may use inline sub-section comments to mark regions.
 Format:
 
 ```gdscript
-    # -- Sub-section label -----------------------------------------------------
+    # -- Sub-section label --
 ```
 
 Only add inline sub-sections when the function is long enough to need navigation. Short functions under roughly 15 lines do not need them.
@@ -258,7 +258,7 @@ Only add inline sub-sections when the function is long enough to need navigation
 Private functions belong inside the section they serve, not in a global private section at the bottom.
 
 ```gdscript
-# == Result ===================================================================
+# == Result ==
 
 func _commit_result() -> void:
     ...
@@ -278,35 +278,35 @@ Exception: `_on_xxx` signal callbacks always go in `# == Signal handlers ==`, re
 # One-line description.
 extends Control
 
-# -- Constants ----------------------------------------------------------------
+# -- Constants --
 
 const MAX_SLOTS := 6
 const ItemRowScene := preload("uid://...")
 
-# -- State --------------------------------------------------------------------
+# -- State --
 
 var _items: Array[ExampleEntry] = []
 
-# -- Node references ----------------------------------------------------------
+# -- Node references --
 
 @onready var _row_container: VBoxContainer = %RowContainer
 @onready var _continue_button: Button = %ContinueButton
 
 
-# == Lifecycle ================================================================
+# == Lifecycle ==
 
 func _ready() -> void:
     _continue_button.pressed.connect(_on_continue_pressed)
     _populate_rows()
 
 
-# == Signal handlers ===========================================================
+# == Signal handlers ==
 
 func _on_continue_pressed() -> void:
     SceneRouter.go_to(&"next_scene")
 
 
-# == Rows =====================================================================
+# == Rows ==
 
 func _populate_rows() -> void:
     for entry: ExampleEntry in _items:
@@ -318,17 +318,17 @@ func _populate_rows() -> void:
 
 ---
 
-# 9. Header Length Reference
+# 9. Header Reference
 
-Both formats should reach approximately column 80, including indent for inline variants.
+Headers use short ASCII markers and are not padded to a fixed column.
 
 ```gdscript
-# -- Label --------------------------------------------------------------------
-# == Label ====================================================================
-    # -- Label ----------------------------------------------------------------
+# -- Label --
+# == Label ==
+    # -- Label --
 ```
 
-Use a consistent character count per format rather than eyeballing it each time. The exact dash count matters less than visual consistency; copy from an existing header.
+Legacy padded or Unicode headers may remain in old files. When editing a file that uses the old format, update touched headers to the short ASCII format opportunistically rather than performing bulk-only rewrites.
 
 ---
 
@@ -383,16 +383,16 @@ The component's `setup()` is its apply function: a single public entry point tha
 A reusable component's `setup()` is its apply function, but it has a specific internal shape because it may be called either before or after the component enters the scene tree.
 
 ```gdscript
-# -- State --------------------------------------------------------------------
+# -- State --
 
 var _entity: ExampleEntityData = null
 
-# -- Node references ----------------------------------------------------------
+# -- Node references --
 
 @onready var _name_label: Label = %NameLabel
 
 
-# == Lifecycle ================================================================
+# == Lifecycle ==
 
 func _ready() -> void:
     _select_button.pressed.connect(func() -> void: selected.emit())
@@ -401,7 +401,7 @@ func _ready() -> void:
         _apply()
 
 
-# == Common API ================================================================
+# == Common API ==
 
 func setup(entity: ExampleEntityData) -> void:
     _entity = entity
@@ -415,7 +415,7 @@ func refresh() -> void:
         _apply()
 
 
-# == View =====================================================================
+# == View ==
 
 func _apply() -> void:
     _name_label.text = _entity.display_name

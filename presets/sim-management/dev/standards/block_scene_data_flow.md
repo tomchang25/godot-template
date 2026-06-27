@@ -20,25 +20,25 @@ post-construction property tweaking from the parent — everything flows through
 never touches `@onready` nodes directly:
 
 ```gdscript
-# ── State ─────────────────────────────────────────────────────────────────────
+# -- State --
 var _entity: ExampleEntityData = null
 
-# ── Node references ───────────────────────────────────────────────────────────
+# -- Node references --
 @onready var _name_label: Label = $NameLabel
 
-# ══ Lifecycle ═════════════════════════════════════════════════════════════════
+# == Lifecycle ==
 func _ready() -> void:
     _buy_button.pressed.connect(func() -> void: buy_pressed.emit())
     if _entity != null:        # setup() already ran before we entered the tree
         _apply()
 
-# ══ Common API ════════════════════════════════════════════════════════════════
+# == Common API ==
 func setup(entity: ExampleEntityData) -> void:
     _entity = entity           # only stores args
     if is_node_ready():
         _apply()
 
-# ══ View ══════════════════════════════════════════════════════════════════════
+# == View ==
 func _apply() -> void:         # the ONLY function that writes @onready nodes
     _name_label.text = _entity.display_name
 ```
