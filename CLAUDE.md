@@ -1,5 +1,13 @@
 # Godot Template — repo guide (three layers)
 
+## Startup
+
+Before answering any repository-specific question or doing any work in this repo, first read this file. If you entered through `AGENTS.md`, continue here and treat this file as the root repository guide.
+
+**Model-tier gate (Fable)**: if you are running as a Fable-class model, you may freely read individual files. If a task requires reading 10 or more files in a single operation (e.g. codebase-wide search sweeps, bulk lint passes, large diff reviews), stop and confirm with me first before proceeding.
+
+## Repository Model
+
 This repo is a three-layer Godot 4.6 template: a paradigm-neutral **base** plus thin
 **preset** overlays. Read `README.md` for the model. Each layer has its own `CLAUDE.md`
 — **work inside the layer you're editing and follow that layer's guide.**

@@ -17,3 +17,6 @@
 # Composed projects (tools/compose.py output)
 /build/
 **/.opencode
+!/.opencode/
+!/.opencode/commands/
+!/.opencode/commands/*.md

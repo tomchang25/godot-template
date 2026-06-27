@@ -2,7 +2,7 @@
 
 ## Required Startup
 
-Read this file before answering any repository-specific question or doing any work in this repo. If you entered through `CLAUDE.md`, continue here and treat this file as the shared source of truth.
+Read this file before answering any repository-specific question or doing any work in this repo. If you entered through `AGENTS.md` or `CLAUDE.md`, continue here and treat this file as the shared source of truth.
 
 ## Project Snapshot
 
@@ -10,7 +10,7 @@ This is a Godot 4.6 project built from the data-driven template base plus an opt
 
 ## Agent Rules
 
-Agent-specific instructions live in `dev/agent_rules/`. Read them before starting relevant work. Key rules: `sandbox_environment.md` (shell vs. file tools), `lint_before_finish.md` (run linter on changed files), `git_operations.md` (git is read-only unless the user explicitly asks for mutation), `godot_test_check.md` (never run Godot against the mount; use the /tmp snapshot procedure), `godot_tests.md` (how to run the GUT unit suite).
+Agent-specific instructions live in `dev/agent_rules/`. Read them before starting relevant work. Key rules: `sandbox_environment.md` (shell vs. file tools), `lint_before_finish.md` (run linter on changed files), `git_operations.md` (git is read-only unless the user explicitly asks for mutation), `godot_test_check.md` (never run Godot against the mount; use the /tmp snapshot procedure), `godot_tests.md` (how to run the GUT unit suite), `save_migrations.md` (never delete migration code without sign-off).
 
 ## Dev File Placement
 
@@ -29,9 +29,15 @@ Before creating or moving files under `dev/`, classify by the primary thing the 
 
 Resolve unknowns by asking directly during the planning conversation. Do not leave unresolved decisions parked in a plan or spec.
 
+**Batch questions, never spam**: Ask clarifying questions before you start the work, and batch every question you have into a single question set. Do not ask another round of questions before the previous one has been answered.
+
+**Answer questions before implementing**: when the user's message contains a question, answer it in conversation first before doing the work. If the answer could change what gets built, wait for confirmation instead of proceeding on assumptions.
+
 ## Workflow Commands
 
 Command workflows live in `dev/workflows/commands/`. When asked to do a command task, read the matching file before acting and follow it exactly. Slash form, dash form, `cmd <name>`, and natural-language requests are all valid.
+
+The opencode slash-command files under `.opencode/commands/` are thin entry wrappers only. They must not duplicate the workflow. The final source of truth remains `dev/workflows/commands/`.
 
 - `/closeout` -> `dev/workflows/commands/closeout.md`: closes out completed work — staged changes or a feature branch covering one or more plans.
 - `/commit-msg` -> `dev/workflows/commands/commit-msg.md`: suggests a conventional commit message for currently staged changes.
