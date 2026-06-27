@@ -303,7 +303,7 @@ func _ready() -> void:
 # == Signal handlers ===========================================================
 
 func _on_continue_pressed() -> void:
-    GameManager.go_to("next_scene")
+    SceneRouter.go_to(&"next_scene")
 
 
 # == Rows =====================================================================

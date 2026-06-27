@@ -1,0 +1,223 @@
+[gd_scene load_steps=3 format=3 uid="uid://template_settings_overlay"]
+
+[ext_resource type="Script" path="res://game/shared/settings_overlay/settings_overlay.gd" id="1_settings"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.12, 0.12, 0.15, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.25, 0.25, 0.3, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="SettingsOverlay" type="CanvasLayer"]
+layer = 100
+script = ExtResource("1_settings")
+
+[node name="Background" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.6)
+
+[node name="CenterControl" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="CenterControl"]
+custom_minimum_size = Vector2(520, 0)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.06
+anchor_right = 0.5
+anchor_bottom = 0.94
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterControl/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CenterControl/Panel/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="RootVBox" type="VBoxContainer" parent="CenterControl/Panel/MarginContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 18
+
+[node name="TitleLabel" type="Label" parent="CenterControl/Panel/MarginContainer/ScrollContainer/RootVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "UI_SETTINGS_TITLE"
+horizontal_alignment = 1
+
+[node name="AudioLabel" type="Label" parent="CenterControl/Panel/MarginContainer/ScrollContainer/RootVBox"]
+layout_mode = 2
+text = "UI_SETTINGS_AUDIO"
+
+[node name="MasterRow" type="HBoxContainer" parent="CenterControl/Panel/MarginContainer/ScrollContainer/RootVBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="MasterLabel" type="Label" parent="CenterControl/Panel/MarginContainer/ScrollContainer/RootVBox/MasterRow"]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+text = "UI_SETTINGS_MASTER"
+
+[node name="MasterSlider" type="HSlider" parent="CenterControl/Panel/MarginContainer/ScrollContainer/RootVBox/MasterRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MasterValueLabel" type="Label" parent="CenterControl/Panel/MarginContainer/ScrollContainer/RootVBox/MasterRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(52, 0)
+layout_mode = 2
+text = "100%"
+horizontal_alignment = 2
+
+[node name="SfxRow" type="HBoxContainer" parent="CenterControl/Panel/MarginContainer/ScrollContainer/RootVBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="SfxLabel" type="Label" parent="CenterControl/Panel/MarginContainer/ScrollContainer/RootVBox/SfxRow"]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+text = "UI_SETTINGS_SFX"
+
+[node name="SfxSlider" type="HSlider" parent="CenterControl/Panel/MarginContainer/ScrollContainer/RootVBox/SfxRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SfxValueLabel" type="Label" parent="CenterControl/Panel/MarginContainer/ScrollContainer/RootVBox/SfxRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(52, 0)
+layout_mode = 2
+text = "100%"
+horizontal_alignment = 2
+
+[node name="MusicRow" type="HBoxContainer" parent="CenterControl/Panel/MarginContainer/ScrollContainer/RootVBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="MusicLabel" type="Label" parent="CenterControl/Panel/MarginContainer/ScrollContainer/RootVBox/MusicRow"]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+text = "UI_SETTINGS_MUSIC"
+
+[node name="MusicSlider" type="HSlider" parent="CenterControl/Panel/MarginContainer/ScrollContainer/RootVBox/MusicRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MusicValueLabel" type="Label" parent="CenterControl/Panel/MarginContainer/ScrollContainer/RootVBox/MusicRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(52, 0)
+layout_mode = 2
+text = "100%"
+horizontal_alignment = 2
+
+[node name="DisplayLabel" type="Label" parent="CenterControl/Panel/MarginContainer/ScrollContainer/RootVBox"]
+layout_mode = 2
+text = "UI_SETTINGS_DISPLAY"
+
+[node name="FullscreenRow" type="HBoxContainer" parent="CenterControl/Panel/MarginContainer/ScrollContainer/RootVBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="FullscreenLabel" type="Label" parent="CenterControl/Panel/MarginContainer/ScrollContainer/RootVBox/FullscreenRow"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "UI_SETTINGS_FULLSCREEN"
+
+[node name="FullscreenCheck" type="CheckBox" parent="CenterControl/Panel/MarginContainer/ScrollContainer/RootVBox/FullscreenRow"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LanguageRow" type="HBoxContainer" parent="CenterControl/Panel/MarginContainer/ScrollContainer/RootVBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="LanguageLabel" type="Label" parent="CenterControl/Panel/MarginContainer/ScrollContainer/RootVBox/LanguageRow"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "UI_SETTINGS_LANGUAGE"
+
+[node name="LanguageOption" type="OptionButton" parent="CenterControl/Panel/MarginContainer/ScrollContainer/RootVBox/LanguageRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+item_count = 3
+popup/item_0/text = "UI_SETTINGS_ENGLISH"
+popup/item_0/id = 0
+popup/item_1/text = "UI_SETTINGS_TRADITIONAL_CHINESE"
+popup/item_1/id = 1
+popup/item_2/text = "UI_SETTINGS_SIMPLIFIED_CHINESE"
+popup/item_2/id = 2
+
+[node name="GameplayLabel" type="Label" parent="CenterControl/Panel/MarginContainer/ScrollContainer/RootVBox"]
+layout_mode = 2
+text = "UI_SETTINGS_GAMEPLAY"
+
+[node name="DebugRow" type="HBoxContainer" parent="CenterControl/Panel/MarginContainer/ScrollContainer/RootVBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="DebugLabel" type="Label" parent="CenterControl/Panel/MarginContainer/ScrollContainer/RootVBox/DebugRow"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "UI_SETTINGS_DEBUG_MODE"
+
+[node name="DebugCheck" type="CheckBox" parent="CenterControl/Panel/MarginContainer/ScrollContainer/RootVBox/DebugRow"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SkipTutorialRow" type="HBoxContainer" parent="CenterControl/Panel/MarginContainer/ScrollContainer/RootVBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="SkipTutorialLabel" type="Label" parent="CenterControl/Panel/MarginContainer/ScrollContainer/RootVBox/SkipTutorialRow"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "UI_SETTINGS_SKIP_TUTORIALS"
+
+[node name="SkipTutorialCheck" type="CheckBox" parent="CenterControl/Panel/MarginContainer/ScrollContainer/RootVBox/SkipTutorialRow"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ButtonRow" type="HBoxContainer" parent="CenterControl/Panel/MarginContainer/ScrollContainer/RootVBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="CloseButton" type="Button" parent="CenterControl/Panel/MarginContainer/ScrollContainer/RootVBox/ButtonRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 44)
+layout_mode = 2
+text = "UI_SETTINGS_CLOSE"
+
+[node name="MainMenuButton" type="Button" parent="CenterControl/Panel/MarginContainer/ScrollContainer/RootVBox/ButtonRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 44)
+layout_mode = 2
+text = "UI_SETTINGS_RETURN_TO_MAIN_MENU"

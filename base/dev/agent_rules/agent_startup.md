@@ -10,7 +10,7 @@ This is a Godot 4.6 project built from the data-driven template base plus an opt
 
 ## Agent Rules
 
-Agent-specific instructions live in `dev/agent_rules/`. Read them before starting relevant work. Key rules: `sandbox_environment.md` (shell vs. file tools), `lint_before_finish.md` (run linter on changed files), `git_operations.md` (git is read-only unless the user explicitly asks for mutation), `godot_test_check.md` (never run Godot against the mount; use the /tmp snapshot procedure), `godot_tests.md` (how to run the GUT unit suite), `save_migrations.md` (never delete migration code without sign-off).
+Agent-specific instructions live in `dev/agent_rules/`. Read them before starting relevant work. Key rules: `sandbox_environment.md` (shell vs. file tools), `lint_before_finish.md` (run linter on changed files), `git_operations.md` (git is read-only unless the user explicitly asks for mutation), `godot_test_check.md` (never run Godot against the mount; use the /tmp snapshot procedure), `godot_tests.md` (how to run the GUT unit suite), `save_migrations.md` (never delete migration code without sign-off), `navigation_settings_debug.md` (SceneRouter, Start Page, settings overlay, and Debug gate work).
 
 ## Dev File Placement
 

@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://scene_router_sim"]
+
+[ext_resource type="Script" path="res://global/autoloads/scene_router/scene_router.gd" id="1_router"]
+[ext_resource type="Script" path="res://global/autoloads/scene_router/scene_registry.gd" id="2_registry"]
+[ext_resource type="PackedScene" path="res://game/meta/start/start_page_scene.tscn" id="3_start"]
+[ext_resource type="PackedScene" path="res://game/example_sim/example_sim_scene.tscn" id="4_example"]
+[ext_resource type="PackedScene" uid="uid://test_runner_scene" path="res://test/test_runner.tscn" id="5_test"]
+
+[sub_resource type="Resource" id="Resource_scenes"]
+script = ExtResource("2_registry")
+default_route = &"example_sim"
+start_route = &"start_page"
+test_route = &"test_runner"
+routes = {
+"example_sim": ExtResource("4_example"),
+"start_page": ExtResource("3_start"),
+"test_runner": ExtResource("5_test")
+}
+
+[node name="SceneRouter" type="Node"]
+script = ExtResource("1_router")
+scenes = SubResource("Resource_scenes")

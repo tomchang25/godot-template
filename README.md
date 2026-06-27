@@ -33,7 +33,7 @@ convention on top, without copying any spine.
 
 - **Four spines**: data pipeline (YAML→tres→registry), boot orchestration
   (autoloaded registries), save system (thin provider-based `SaveManager`), scene
-  routing (`GameManager`).
+  routing (`SceneRouter`).
 - **Neutral standards**: naming, project structure (skeleton), registries, lint
   enforcement, plan/spec standards, commits, and the block-scene **node-source rule**.
 - The save layer ships only the **contract** (`to_dict`/`from_dict`/`validate` +

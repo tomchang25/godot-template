@@ -1,0 +1,72 @@
+[gd_scene format=3 uid="uid://template_start_page"]
+
+[ext_resource type="Script" path="res://game/meta/start/start_page_scene.gd" id="1_start"]
+
+[node name="StartPageScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_start")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.075, 0.08, 0.1, 1)
+
+[node name="RootVBox" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 40
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="RootVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "UI_START_TITLE"
+horizontal_alignment = 1
+
+[node name="SubtitleLabel" type="Label" parent="RootVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "UI_START_SUBTITLE"
+horizontal_alignment = 1
+
+[node name="ButtonsVBox" type="VBoxContainer" parent="RootVBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 16
+
+[node name="StartButton" type="Button" parent="RootVBox/ButtonsVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(360, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 22
+text = "UI_START_START"
+
+[node name="SettingsButton" type="Button" parent="RootVBox/ButtonsVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(360, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 22
+text = "UI_START_SETTINGS"
+
+[node name="QuitButton" type="Button" parent="RootVBox/ButtonsVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(360, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 22
+text = "UI_START_QUIT"

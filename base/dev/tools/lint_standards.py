@@ -49,7 +49,7 @@ VALID_NODE_SRC_TAGS = frozenset(
         "instance",    # packed scene instance not auto-detected as instantiate()
         "ephemeral",   # tooltip, empty-state label, separator in a dynamic list
         "drawn",       # custom-drawn control (inner class with _draw())
-        "debug",       # debug-only display behind OS.is_debug_build()
+        "debug",       # debug-only display behind Debug.enabled
         "timer",       # Timer node (must be created in code, never in .tscn)
     }
 )
